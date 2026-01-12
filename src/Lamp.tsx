@@ -1,0 +1,50 @@
+// Source of lamp/bulb: https://codepen.io/elrumordelaluz/pen/abqOGP
+
+import "./Lamp.css";
+
+export function Lamp() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 130" class="lamp">
+      {/* <!-- bulb --> */}
+      <g>
+        <circle class="bulb" style="" cx="30" cy="109.3" r="10.7" />
+        <line
+          style="fill:none;stroke:#D7D5AF;stroke-width:0.263;stroke-linecap:round;stroke-miterlimit:10;"
+          x1="28.1"
+          y1="108.1"
+          x2="27.4"
+          y2="113.4"
+        />
+        <line
+          style="fill:none;stroke:#D7D5AF;stroke-width:0.263;stroke-linecap:round;stroke-miterlimit:10;"
+          x1="32"
+          y1="108.1"
+          x2="32.6"
+          y2="113.4"
+        />
+        <polyline
+          style="fill:none;stroke:#D7D5AF;stroke-width:0.263;stroke-linecap:round;stroke-miterlimit:10;"
+          points="27.8,113.5 28.3,112.8 28.8,113.5 29.6,112.8 30,113.5 30.7,112.9 31.2,113.5 31.8,112.8 32.3,113.5"
+        />
+      </g>
+      {/* <!-- /bulb --> */}
+      <rect
+        x="20.7"
+        y="66.7"
+        style="fill:#2D2D2F;"
+        width="18.6"
+        height="15.6"
+      />
+      <rect x="28.5" y="0" style="fill:#2D2D2F;" width="3" height="66.7" />
+      <path
+        style="fill:#2D2D2F;"
+        d="M30,80.3c-16.6,0-30,13.4-30,30h60C60,93.8,46.6,80.3,30,80.3z"
+      />
+      <path
+        style="fill:#2D2D2F;"
+        d="M30,80.3c-16.6,0-30,13.4-30,30h60C60,93.8,46.6,80.3,30,80.3z"
+      />
+    </svg>
+  );
+
+}
