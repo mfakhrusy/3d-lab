@@ -16,13 +16,13 @@ export function Clock() {
   const hourRotation = () => {
     const hours = time().getHours() % 12;
     const minutes = time().getMinutes();
-    return (hours * 30) + (minutes * 0.5);
+    return hours * 30 + minutes * 0.5;
   };
 
   const minuteRotation = () => {
     const minutes = time().getMinutes();
     const seconds = time().getSeconds();
-    return (minutes * 6) + (seconds * 0.1);
+    return minutes * 6 + seconds * 0.1;
   };
 
   const secondRotation = () => {
@@ -44,7 +44,7 @@ export function Clock() {
       <Show when={isZoomed()}>
         <div class="clock-backdrop" onClick={handleBackdropClick} />
       </Show>
-      
+
       <svg
         class="clock"
         classList={{ "clock-zoomed": isZoomed() }}
@@ -53,20 +53,10 @@ export function Clock() {
         onClick={handleClick}
       >
         {/* Clock face */}
-        <circle
-          cx="50"
-          cy="50"
-          r="48"
-          class="clock-face"
-        />
-        
+        <circle cx="50" cy="50" r="48" class="clock-face" />
+
         {/* Inner ring */}
-        <circle
-          cx="50"
-          cy="50"
-          r="44"
-          class="clock-inner"
-        />
+        <circle cx="50" cy="50" r="44" class="clock-inner" />
 
         {/* Hour markers */}
         {[...Array(12)].map((_, i) => {
@@ -75,15 +65,7 @@ export function Clock() {
           const y1 = 50 + 38 * Math.sin(angle);
           const x2 = 50 + 42 * Math.cos(angle);
           const y2 = 50 + 42 * Math.sin(angle);
-          return (
-            <line
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
-              class="clock-marker"
-            />
-          );
+          return <line x1={x1} y1={y1} x2={x2} y2={y2} class="clock-marker" />;
         })}
 
         {/* Minute markers (only visible when zoomed) */}
@@ -161,12 +143,7 @@ export function Clock() {
         </Show>
 
         {/* Center dot */}
-        <circle
-          cx="50"
-          cy="50"
-          r={isZoomed() ? 4 : 3}
-          class="clock-center"
-        />
+        <circle cx="50" cy="50" r={isZoomed() ? 4 : 3} class="clock-center" />
       </svg>
     </>
   );
