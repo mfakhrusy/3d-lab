@@ -2,8 +2,8 @@
 export function RobotPersona() {
   return (
     <svg
-      width="20%"
-      height="20%"
+      width="200px"
+      height="200px"
       viewBox="0 0 1646 574"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -16,6 +16,10 @@ export function RobotPersona() {
         'stroke-linecap': "round",
         'stroke-linejoin': "round",
         'stroke-miterlimit': 1.5,
+        'position': 'absolute',
+        'top': '50%',
+        'left': '50%',
+        'transform': 'translate(-50%, -50%)',
       }}
     >
       <rect
