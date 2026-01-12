@@ -3,6 +3,7 @@ import "./App.css";
 import type { LampPhase } from "./type";
 import { Lamp } from "./Lamp";
 import { Clock } from "./Clock";
+import { Calendar } from "./Calendar";
 import { RobotPersona } from "./RobotPersona/RobotPersona";
 
 type ContentItem = {
@@ -121,6 +122,7 @@ const App = () => {
           <Show when={scene() === "office"}>
             <Lamp />
             <Clock />
+            <Calendar />
             <RobotPersona />
           </Show>
 
