@@ -70,6 +70,8 @@ function RobotPersonaRightEye() {
       style={{
         "font-family": "Arial, sans-serif",
         "font-size": "382.409px",
+        "user-select": "none",
+        "pointer-events": "none",
       }}
     >
       &gt;
@@ -87,6 +89,8 @@ function RobotPersonaLeftEye() {
         style={{
           "font-family": "Arial, sans-serif",
           "font-size": "382.409px",
+          "user-select": "none",
+          "pointer-events": "none",
         }}
       >
         &gt;

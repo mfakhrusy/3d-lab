@@ -12,7 +12,8 @@ export function SpeechBubble() {
   const [displayedText, setDisplayedText] = createSignal("");
   const [isVisible, setIsVisible] = createSignal(false);
 
-  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   const animateSentences = async () => {
     let currentText = "";
@@ -79,7 +80,6 @@ export function SpeechBubble() {
           bottom: "65%",
           left: "112px",
           overflow: "visible",
-        //   transition: "height 0.1s ease-out",
         }}
       >
         <style>
@@ -113,17 +113,23 @@ export function SpeechBubble() {
               fill: "#ffffff",
               stroke: "#000",
               "stroke-width": "1px",
-            //   transition: "all 0.1s ease-out",
             }}
           />
 
           <text
             x={20}
-            y={lineCount() >= 3 ? 28 : lineCount() >= 2 ? 35 : 45}
+            y={(() => {
+              const fontSize = 20;
+              const lineHeight = 28;
+              const totalTextHeight = fontSize + (lineCount() - 1) * lineHeight;
+              return (bubbleHeight() - totalTextHeight) / 2 + fontSize;
+            })()}
             style={{
               "font-family": "Arial, sans-serif",
               "font-size": "20px",
               fill: "#000",
+              "user-select": "none",
+              "pointer-events": "none",
             }}
           >
             {lines().map((line, i) => (
