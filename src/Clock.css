@@ -1,0 +1,46 @@
+.clock {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  top: 40px;
+  right: 80px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.clock-face {
+  fill: #f5f5f5;
+  stroke: #e0e0e0;
+  stroke-width: 2;
+}
+
+.clock-inner {
+  fill: none;
+  stroke: #d0d0d0;
+  stroke-width: 1;
+}
+
+.clock-marker {
+  stroke: #2d2d2f;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.clock-hand {
+  stroke-linecap: round;
+  transform-origin: 50px 50px;
+  transition: transform 0.3s cubic-bezier(0.4, 2.3, 0.3, 1);
+}
+
+.hour-hand {
+  stroke: #1a1a1a;
+  stroke-width: 3;
+}
+
+.minute-hand {
+  stroke: #2d2d2f;
+  stroke-width: 2;
+}
+
+.clock-center {
+  fill: #1a1a1a;
+}

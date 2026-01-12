@@ -2,6 +2,7 @@ import { createSignal, createEffect, Show } from "solid-js";
 import "./App.css";
 import type { LampPhase } from "./type";
 import { Lamp } from "./Lamp";
+import { Clock } from "./Clock";
 import { RobotPersona } from "./RobotPersona/RobotPersona";
 
 type ContentItem = {
@@ -119,7 +120,7 @@ const App = () => {
 
           <Show when={scene() === "office"}>
             <Lamp />
-            {/* <img src={RobotPersona} alt="Office" width="200px" /> */}
+            <Clock />
             <RobotPersona />
           </Show>
 
