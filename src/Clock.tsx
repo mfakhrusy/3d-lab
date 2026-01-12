@@ -4,6 +4,7 @@ import "./Clock.css";
 export function Clock() {
   const [time, setTime] = createSignal(new Date());
   const [isZoomed, setIsZoomed] = createSignal(false);
+  const [showDetailed, setShowDetailed] = createSignal(false);
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -32,11 +33,18 @@ export function Clock() {
 
   const handleClick = (e: Event) => {
     e.stopPropagation();
-    setIsZoomed(!isZoomed());
+    if (!isZoomed()) {
+      setIsZoomed(true);
+      setTimeout(() => setShowDetailed(true), 300);
+    } else {
+      setShowDetailed(false);
+      setTimeout(() => setIsZoomed(false), 300);
+    }
   };
 
   const handleBackdropClick = () => {
-    setIsZoomed(false);
+    setShowDetailed(false);
+    setTimeout(() => setIsZoomed(false), 300);
   };
 
   return (
@@ -68,8 +76,36 @@ export function Clock() {
           return <line x1={x1} y1={y1} x2={x2} y2={y2} class="clock-marker" />;
         })}
 
-        {/* Minute markers (only visible when zoomed) */}
-        <Show when={isZoomed()}>
+        {/* Simple view elements - fade out when detailed */}
+        <g
+          class="clock-simple-view"
+          classList={{ "clock-view-hidden": showDetailed() }}
+        >
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="26"
+            class="clock-hand hour-hand"
+            style={{ transform: `rotate(${hourRotation()}deg)` }}
+          />
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="16"
+            class="clock-hand minute-hand"
+            style={{ transform: `rotate(${minuteRotation()}deg)` }}
+          />
+          <circle cx="50" cy="50" r="3" class="clock-center" />
+        </g>
+
+        {/* Detailed view elements - fade in when zoomed */}
+        <g
+          class="clock-detailed-view"
+          classList={{ "clock-view-visible": showDetailed() }}
+        >
+          {/* Minute markers */}
           {[...Array(60)].map((_, i) => {
             if (i % 5 === 0) return null;
             const angle = (i * 6 - 90) * (Math.PI / 180);
@@ -87,10 +123,8 @@ export function Clock() {
               />
             );
           })}
-        </Show>
 
-        {/* Numbers (only visible when zoomed) */}
-        <Show when={isZoomed()}>
+          {/* Numbers */}
           {[...Array(12)].map((_, i) => {
             const hour = i === 0 ? 12 : i;
             const angle = (i * 30 - 90) * (Math.PI / 180);
@@ -108,30 +142,24 @@ export function Clock() {
               </text>
             );
           })}
-        </Show>
 
-        {/* Hour hand */}
-        <line
-          x1="50"
-          y1="50"
-          x2="50"
-          y2="26"
-          class="clock-hand hour-hand"
-          style={{ transform: `rotate(${hourRotation()}deg)` }}
-        />
-
-        {/* Minute hand */}
-        <line
-          x1="50"
-          y1="50"
-          x2="50"
-          y2="16"
-          class="clock-hand minute-hand"
-          style={{ transform: `rotate(${minuteRotation()}deg)` }}
-        />
-
-        {/* Second hand (only visible when zoomed) */}
-        <Show when={isZoomed()}>
+          {/* Hands */}
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="26"
+            class="clock-hand hour-hand"
+            style={{ transform: `rotate(${hourRotation()}deg)` }}
+          />
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="16"
+            class="clock-hand minute-hand"
+            style={{ transform: `rotate(${minuteRotation()}deg)` }}
+          />
           <line
             x1="50"
             y1="55"
@@ -140,10 +168,13 @@ export function Clock() {
             class="clock-hand second-hand"
             style={{ transform: `rotate(${secondRotation()}deg)` }}
           />
-        </Show>
-
-        {/* Center dot */}
-        <circle cx="50" cy="50" r={isZoomed() ? 4 : 3} class="clock-center" />
+          <circle
+            cx="50"
+            cy="50"
+            r="4"
+            class="clock-center clock-center-detailed"
+          />
+        </g>
       </svg>
     </>
   );
