@@ -2,7 +2,39 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
+  cursor: pointer;
+  z-index: 10;
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.5s ease;
+}
+
+.robot-persona:hover:not(.robot-persona-chat-mode) {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.robot-persona-chat-mode {
+  transform: translate(-50%, -50%) scale(1.8);
+  z-index: 1000;
+}
+
+.robot-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  animation: robotBackdropFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes robotBackdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .robot-persona-svg {

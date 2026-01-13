@@ -1,12 +1,40 @@
+import { createSignal, Show } from "solid-js";
 import { SpeechBubble } from "./SpeechBubble";
 import "./RobotPersona.css";
 
 export function RobotPersona() {
+  const [isChatMode, setIsChatMode] = createSignal(false);
+
+  const handleRobotClick = (e: Event) => {
+    e.stopPropagation();
+    if (isChatMode()) {
+      setIsChatMode(false);
+    } else {
+      setIsChatMode(true);
+    }
+  };
+
+  const handleBackdropClick = () => {
+    setIsChatMode(false);
+  };
+
   return (
-    <div class="robot-persona">
-      <RobotPersonaSvg />
-      <SpeechBubble />
-    </div>
+    <>
+      <Show when={isChatMode()}>
+        <div class="robot-backdrop" onClick={handleBackdropClick} />
+      </Show>
+
+      <div
+        class="robot-persona"
+        classList={{ "robot-persona-chat-mode": isChatMode() }}
+        onClick={handleRobotClick}
+      >
+        <RobotPersonaSvg />
+        <Show when={!isChatMode()}>
+          <SpeechBubble />
+        </Show>
+      </div>
+    </>
   );
 }
 
