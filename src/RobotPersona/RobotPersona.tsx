@@ -44,6 +44,7 @@ export function RobotPersona(props: RobotPersonaProps) {
         <RobotPersonaSvg
           isTalking={isTalking()}
           showWave={isWelcomeStarted() && !isWelcomeComplete()}
+          isInteractive={props.isInteractive}
         />
         <Show when={!isChatMode()}>
           <SpeechBubble
@@ -66,6 +67,7 @@ export function RobotPersona(props: RobotPersonaProps) {
 type RobotPersonaSvgProps = {
   isTalking: boolean;
   showWave: boolean;
+  isInteractive?: boolean;
 };
 
 function RobotPersonaSvg(props: RobotPersonaSvgProps) {
@@ -99,8 +101,7 @@ function RobotPersonaSvg(props: RobotPersonaSvgProps) {
 
       <g transform="matrix(382.409469,0,0,382.409469,615.658175,310.71451)" />
 
-      <RobotPersonaRightEye />
-      <RobotPersonaLeftEye />
+      <RobotPersonaEyes isInteractive={props.isInteractive} />
       <RobotPersonaMouth isTalking={props.isTalking} />
       <RobotPersonaRightHand showWave={props.showWave} />
       <RobotPersonaLeftHand />
@@ -108,7 +109,30 @@ function RobotPersonaSvg(props: RobotPersonaSvgProps) {
   );
 }
 
-function RobotPersonaRightEye() {
+type RobotPersonaEyesProps = {
+  isInteractive?: boolean;
+};
+
+function RobotPersonaEyes(props: RobotPersonaEyesProps) {
+  return (
+    <g>
+      <Show
+        when={props.isInteractive}
+        fallback={
+          <>
+            <RobotPersonaStraightRightEye />
+            <RobotPersonaStraightLeftEye />
+          </>
+        }
+      >
+        <RobotPersonaSharpRightEye />
+        <RobotPersonaSharpLeftEye />
+      </Show>
+    </g>
+  );
+}
+
+function RobotPersonaSharpRightEye() {
   return (
     <text class="robot-eye" x="392.337px" y="310.715px">
       &gt;
@@ -116,7 +140,7 @@ function RobotPersonaRightEye() {
   );
 }
 
-function RobotPersonaLeftEye() {
+function RobotPersonaSharpLeftEye() {
   return (
     <g transform="matrix(-1,0,0,-1,9415.006527,12926.613143)">
       <g transform="matrix(382.409469,0,0,382.409469,8392.363856,12885.713908)" />
@@ -124,6 +148,36 @@ function RobotPersonaLeftEye() {
         &gt;
       </text>
     </g>
+  );
+}
+
+function RobotPersonaStraightLeftEye() {
+  return (
+    <rect
+      x="1000"
+      y="152"
+      width="174.822"
+      height="46.23"
+      style={{
+        stroke: "#000",
+        "stroke-width": "2.5px",
+      }}
+    />
+  );
+}
+
+function RobotPersonaStraightRightEye() {
+  return (
+    <rect
+      x="490"
+      y="152"
+      width="174.822"
+      height="46.23"
+      style={{
+        stroke: "#000",
+        "stroke-width": "2.5px",
+      }}
+    />
   );
 }
 

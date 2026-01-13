@@ -139,7 +139,10 @@ const App = () => {
             <Lamp isOn={isLampOn()} />
             <Clock isInteractive={isInteractive()} />
             <Calendar isInteractive={isInteractive()} />
-            <RobotPersona roomActions={roomActions} isInteractive={isInteractive()} />
+            <RobotPersona
+              roomActions={roomActions}
+              isInteractive={isInteractive()}
+            />
           </Show>
 
           <nav aria-label="Scene navigation">
