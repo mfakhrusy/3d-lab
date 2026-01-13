@@ -18,6 +18,7 @@ const App = () => {
   const [focus, setFocus] = createSignal<string | null>(null);
   const [lampPhase, setLampPhase] = createSignal<LampPhase>("no-lamp");
   const [isLampOn, setIsLampOn] = createSignal(true);
+  const [isInteractive, setIsInteractive] = createSignal(false);
 
   // ---------- Room Actions ----------
   const roomActions = {
@@ -57,9 +58,13 @@ const App = () => {
   createEffect(() => {
     if (scene() === "office") {
       setLampPhase("no-lamp");
+      setIsInteractive(false);
       setTimeout(() => runLampSequence(), 0);
+      // Enable interactivity after lamp animation + room brightening (5s total)
+      setTimeout(() => setIsInteractive(true), 5000);
     } else {
       setLampPhase("no-lamp");
+      setIsInteractive(false);
     }
   });
 
@@ -132,9 +137,9 @@ const App = () => {
 
           <Show when={scene() === "office"}>
             <Lamp isOn={isLampOn()} />
-            <Clock />
-            <Calendar />
-            <RobotPersona roomActions={roomActions} />
+            <Clock isInteractive={isInteractive()} />
+            <Calendar isInteractive={isInteractive()} />
+            <RobotPersona roomActions={roomActions} isInteractive={isInteractive()} />
           </Show>
 
           <nav aria-label="Scene navigation">

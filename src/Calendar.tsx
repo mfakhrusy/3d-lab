@@ -17,7 +17,11 @@ const MONTHS = [
   "December",
 ];
 
-export function Calendar() {
+type CalendarProps = {
+  isInteractive: boolean;
+};
+
+export function Calendar(props: CalendarProps) {
   const [isZoomed, setIsZoomed] = createSignal(false);
   const [showExpanded, setShowExpanded] = createSignal(false);
 
@@ -53,6 +57,7 @@ export function Calendar() {
 
   const handleClick = (e: Event) => {
     e.stopPropagation();
+    if (!props.isInteractive) return;
     if (!isZoomed()) {
       setIsZoomed(true);
       setTimeout(() => setShowExpanded(true), 300);

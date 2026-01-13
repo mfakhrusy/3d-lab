@@ -1,7 +1,11 @@
 import { createSignal, onCleanup, onMount, Show } from "solid-js";
 import "./Clock.css";
 
-export function Clock() {
+type ClockProps = {
+  isInteractive: boolean;
+};
+
+export function Clock(props: ClockProps) {
   const [time, setTime] = createSignal(new Date());
   const [isZoomed, setIsZoomed] = createSignal(false);
   const [showDetailed, setShowDetailed] = createSignal(false);
@@ -33,6 +37,7 @@ export function Clock() {
 
   const handleClick = (e: Event) => {
     e.stopPropagation();
+    if (!props.isInteractive) return;
     if (!isZoomed()) {
       setIsZoomed(true);
       setTimeout(() => setShowDetailed(true), 300);

@@ -11,6 +11,7 @@ export type RoomActions = {
 
 type RobotPersonaProps = {
   roomActions: RoomActions;
+  isInteractive: boolean;
 };
 
 export function RobotPersona(props: RobotPersonaProps) {
@@ -21,6 +22,7 @@ export function RobotPersona(props: RobotPersonaProps) {
 
   const handleRobotClick = (e: Event) => {
     e.stopPropagation();
+    if (!props.isInteractive) return;
     setIsChatMode(true);
   };
 
