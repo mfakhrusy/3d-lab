@@ -2,16 +2,14 @@ import { createSignal, Show } from "solid-js";
 import { RobotBase } from "./RobotBase";
 import { SpeechBubble } from "./SpeechBubble";
 import { ChatPanel } from "./ChatPanel";
+import { parseOfficeCommand } from "./commands/officeCommands";
+import type { OfficeActions } from "./types";
 import "./RobotOffice.css";
 
-export type RoomActions = {
-  toggleLamp: () => void;
-  setLampOn: (on: boolean) => void;
-  isLampOn: () => boolean;
-};
+export type { OfficeActions };
 
 type RobotOfficeProps = {
-  roomActions: RoomActions;
+  roomActions: OfficeActions;
   isInteractive: boolean;
 };
 
@@ -58,7 +56,9 @@ export function RobotOffice(props: RobotOfficeProps) {
         <Show when={isChatMode()}>
           <ChatPanel
             onTalkingChange={setIsTalking}
-            roomActions={props.roomActions}
+            actions={props.roomActions}
+            parseCommand={parseOfficeCommand}
+            welcomeMessage="Hi! Ask me anything about Fahru, or try controlling the room - like 'turn off the light'!"
           />
         </Show>
       </div>

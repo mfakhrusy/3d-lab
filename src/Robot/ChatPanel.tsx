@@ -1,5 +1,5 @@
 import { createSignal, For, createEffect } from "solid-js";
-import type { RoomActions } from "./RobotOffice";
+import type { SceneActions, CommandResult } from "./types";
 import "./ChatPanel.css";
 
 type ChatMessage = {
@@ -7,67 +7,20 @@ type ChatMessage = {
   content: string;
 };
 
-type ChatPanelProps = {
+type ChatPanelProps<T extends SceneActions> = {
   onTalkingChange?: (isTalking: boolean) => void;
-  roomActions: RoomActions;
+  actions: T;
+  parseCommand: (text: string, actions: T) => CommandResult;
+  welcomeMessage?: string;
 };
 
-type CommandResult = {
-  handled: boolean;
-  response: string;
-};
+export function ChatPanel<T extends SceneActions>(props: ChatPanelProps<T>) {
+  const defaultWelcome = "Hi! Ask me anything, or try controlling the room!";
 
-function parseCommand(text: string, roomActions: RoomActions): CommandResult {
-  const lower = text.toLowerCase();
-
-  // Lamp commands
-  if (
-    lower.includes("turn off") &&
-    (lower.includes("light") || lower.includes("lamp"))
-  ) {
-    roomActions.setLampOn(false);
-    return { handled: true, response: "Done! I've turned off the lamp." };
-  }
-
-  if (
-    lower.includes("turn on") &&
-    (lower.includes("light") || lower.includes("lamp"))
-  ) {
-    roomActions.setLampOn(true);
-    return { handled: true, response: "There you go! The lamp is now on." };
-  }
-
-  if (
-    lower.includes("toggle") &&
-    (lower.includes("light") || lower.includes("lamp"))
-  ) {
-    roomActions.toggleLamp();
-    const isOn = roomActions.isLampOn();
-    return {
-      handled: true,
-      response: isOn ? "Lamp is now on!" : "Lamp is now off!",
-    };
-  }
-
-  if (lower.includes("dark") || lower.includes("dim")) {
-    roomActions.setLampOn(false);
-    return { handled: true, response: "Making it dark for you..." };
-  }
-
-  if (lower.includes("bright") || lower.includes("light up")) {
-    roomActions.setLampOn(true);
-    return { handled: true, response: "Let there be light!" };
-  }
-
-  return { handled: false, response: "" };
-}
-
-export function ChatPanel(props: ChatPanelProps) {
   const [messages, setMessages] = createSignal<ChatMessage[]>([
     {
       role: "robot",
-      content:
-        "Hi! Ask me anything about Fahru, or try controlling the room - like 'turn off the light'!",
+      content: props.welcomeMessage ?? defaultWelcome,
     },
   ]);
   const [inputValue, setInputValue] = createSignal("");
@@ -118,8 +71,8 @@ export function ChatPanel(props: ChatPanelProps) {
 
     await delay(300);
 
-    // Check for room commands
-    const commandResult = parseCommand(text, props.roomActions);
+    // Check for scene commands
+    const commandResult = props.parseCommand(text, props.actions);
 
     if (commandResult.handled) {
       await typeResponse(commandResult.response);

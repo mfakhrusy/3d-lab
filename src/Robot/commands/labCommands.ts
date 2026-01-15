@@ -1,0 +1,75 @@
+import type { CommandResult, LabActions, LabPaintColor } from "../types";
+
+const colorNames: Record<LabPaintColor, string[]> = {
+  blue: ["blue", "navy", "azure"],
+  green: ["green", "emerald", "lime"],
+  red: ["red", "crimson", "scarlet"],
+  white: ["white", "bright", "light"],
+  black: ["black", "dark", "noir"],
+};
+
+const colorResponses: Record<LabPaintColor, string> = {
+  blue: "Nice choice! The lab now has a cool blue vibe.",
+  green: "Going green! The lab feels fresh now.",
+  red: "Bold choice! Red walls activated.",
+  white: "Clean and minimal! White walls it is.",
+  black: "Dark mode engaged! The lab is now black.",
+};
+
+function detectColor(text: string): LabPaintColor | null {
+  const lower = text.toLowerCase();
+
+  for (const [color, keywords] of Object.entries(colorNames)) {
+    if (keywords.some((keyword) => lower.includes(keyword))) {
+      return color as LabPaintColor;
+    }
+  }
+
+  return null;
+}
+
+export function parseLabCommand(
+  text: string,
+  actions: LabActions,
+): CommandResult {
+  const lower = text.toLowerCase();
+
+  // Paint/color commands
+  if (
+    lower.includes("paint") ||
+    lower.includes("color") ||
+    lower.includes("wall") ||
+    lower.includes("change") ||
+    lower.includes("make it")
+  ) {
+    const color = detectColor(text);
+
+    if (color) {
+      actions.setPaintColor(color);
+      return { handled: true, response: colorResponses[color] };
+    }
+
+    // User asked about paint but didn't specify a color
+    if (lower.includes("paint") || lower.includes("color")) {
+      const current = actions.getPaintColor();
+      return {
+        handled: true,
+        response: `The walls are currently ${current}. Try: "paint it green" or "make it red"!`,
+      };
+    }
+  }
+
+  // Direct color mentions without "paint"
+  const directColor = detectColor(text);
+  if (
+    directColor &&
+    (lower.includes("make") ||
+      lower.includes("change") ||
+      lower.includes("set"))
+  ) {
+    actions.setPaintColor(directColor);
+    return { handled: true, response: colorResponses[directColor] };
+  }
+
+  return { handled: false, response: "" };
+}
