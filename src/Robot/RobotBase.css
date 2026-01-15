@@ -1,0 +1,107 @@
+/* ========== Robot Base SVG Styles ========== */
+/* Shared styles for both office and lab robots */
+
+.robot-base-svg {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-miterlimit: 1.5;
+}
+
+/* ========== Body - Front ========== */
+.robot-body-outer {
+  fill: #c3c3c3;
+}
+
+.robot-body-inner {
+  fill: #ebebeb;
+}
+
+/* ========== Body - Back ========== */
+.robot-body-outer-back {
+  fill: #a0a0a0;
+}
+
+.robot-body-inner-back {
+  fill: #b8b8b8;
+}
+
+/* ========== Eyes ========== */
+.robot-eye {
+  font-family: Arial, sans-serif;
+  font-size: 382.409px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.robot-straight-eye {
+  fill: #000;
+  stroke: #000;
+  stroke-width: 2.5px;
+}
+
+/* ========== Mouth ========== */
+.robot-mouth {
+  fill: #606060;
+  stroke: #000;
+  stroke-width: 2.5px;
+  transform-origin: 825px 415px;
+  transform: scaleY(1);
+  animation: none;
+}
+
+.robot-mouth-talking {
+  animation: robotTalk 0.3s ease-in-out infinite;
+}
+
+.robot-mouth:not(.robot-mouth-talking) {
+  transform: scaleY(1) !important;
+}
+
+@keyframes robotTalk {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(2.5);
+  }
+}
+
+/* ========== Hands - Front ========== */
+.robot-hand {
+  fill: #e7e7e7;
+  stroke: #000;
+  stroke-width: 2.5px;
+}
+
+/* ========== Hands - Back ========== */
+.robot-hand-back {
+  fill: #c0c0c0;
+  stroke: #000;
+  stroke-width: 2.5px;
+}
+
+/* ========== Hand Waving Animation ========== */
+.robot-right-hand-group {
+  transform-origin: 180px 550px;
+}
+
+.robot-right-hand-waving {
+  animation: robotWave 0.5s ease-in-out infinite;
+  transform-origin: 180px 550px;
+}
+
+@keyframes robotWave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(15deg);
+  }
+}

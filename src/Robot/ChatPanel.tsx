@@ -1,5 +1,5 @@
 import { createSignal, For, createEffect } from "solid-js";
-import type { RoomActions } from "./RobotPersona";
+import type { RoomActions } from "./RobotOffice";
 import "./ChatPanel.css";
 
 type ChatMessage = {

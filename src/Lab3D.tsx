@@ -1,5 +1,6 @@
 import { createSignal, onMount } from "solid-js";
 import "./Lab3D.css";
+import { RobotLab } from "./Robot/RobotLab";
 
 type Lab3DProps = {
   onBack?: () => void;
@@ -35,6 +36,9 @@ export function Lab3D(props: Lab3DProps) {
 
         {/* Ceiling */}
         <div class="lab-wall lab-wall-ceiling" />
+
+        {/* Robot enters from behind */}
+        <RobotLab />
       </div>
 
       {/* Back button outside the 3D space */}

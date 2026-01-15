@@ -5,7 +5,7 @@ import { Lamp } from "./Lamp";
 import { Clock } from "./Clock";
 import { Calendar } from "./Calendar";
 import { Door } from "./Door";
-import { RobotPersona } from "./RobotPersona/RobotPersona";
+import { RobotOffice } from "./Robot/RobotOffice";
 import { Lab3D } from "./Lab3D";
 
 type ContentItem = {
@@ -158,7 +158,7 @@ const App = () => {
             <Clock isInteractive={isInteractive()} />
             <Calendar isInteractive={isInteractive()} />
             <Door isInteractive={isInteractive()} onEnter={handleDoorEnter} />
-            <RobotPersona
+            <RobotOffice
               roomActions={roomActions}
               isInteractive={isInteractive()}
             />

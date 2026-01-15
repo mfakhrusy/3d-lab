@@ -1,7 +1,7 @@
 import { createSignal, onMount, Show } from "solid-js";
 import "./SpeechBubble.css";
 
-const sentences = [
+const defaultSentences = [
   "Hello, this is Fahru.",
   " A software engineer.",
   " This is my home,",
@@ -10,22 +10,28 @@ const sentences = [
 ];
 
 type SpeechBubbleProps = {
+  sentences?: string[];
+  startDelay?: number;
   onTalkingChange?: (isTalking: boolean) => void;
-  onWelcomeStart?: () => void;
-  onWelcomeComplete?: () => void;
+  onStart?: () => void;
+  onComplete?: () => void;
 };
 
 export function SpeechBubble(props: SpeechBubbleProps) {
   const [displayedText, setDisplayedText] = createSignal("");
   const [isVisible, setIsVisible] = createSignal(false);
 
+  const sentences = () => props.sentences ?? defaultSentences;
+  const startDelay = () => props.startDelay ?? 5000;
+
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
   const animateSentences = async () => {
     let currentText = "";
+    const sentenceList = sentences();
 
-    for (const sentence of sentences) {
+    for (const sentence of sentenceList) {
       props.onTalkingChange?.(true);
 
       for (let i = 0; i < sentence.length; i++) {
@@ -36,20 +42,20 @@ export function SpeechBubble(props: SpeechBubbleProps) {
 
       props.onTalkingChange?.(false);
 
-      if (sentence !== sentences[sentences.length - 1]) {
+      if (sentence !== sentenceList[sentenceList.length - 1]) {
         await delay(1500);
       }
     }
 
-    props.onWelcomeComplete?.();
+    props.onComplete?.();
   };
 
   onMount(() => {
     setTimeout(() => {
       setIsVisible(true);
-      props.onWelcomeStart?.();
+      props.onStart?.();
       animateSentences();
-    }, 5000);
+    }, startDelay());
   });
 
   const bubbleWidth = 400;
