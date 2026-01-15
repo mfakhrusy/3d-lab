@@ -83,11 +83,6 @@ function RobotBodyBack() {
         width={975.169}
         height={524.831}
       />
-      {/* Back panel details */}
-      <rect x={500} y={100} width={650} height={350} fill="#a0a0a0" rx={8} />
-      <rect x={600} y={150} width={450} height={50} fill="#888" rx={4} />
-      <rect x={600} y={250} width={450} height={50} fill="#888" rx={4} />
-      <rect x={600} y={350} width={450} height={50} fill="#888" rx={4} />
     </>
   );
 }
