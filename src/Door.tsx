@@ -20,7 +20,7 @@ export function Door(props: DoorProps) {
       if (props.onEnter) {
         props.onEnter();
       }
-    }, 2000);
+    }, 1500);
   };
 
   return (

@@ -116,11 +116,7 @@ const App = () => {
   };
 
   return (
-    <main
-      class="app"
-      classList={{ "app-entering-door": isEnteringDoor() }}
-      role="main"
-    >
+    <main class="app" role="main">
       {/* Door transition overlay */}
       <Show when={isEnteringDoor()}>
         <div class="door-transition-overlay" />

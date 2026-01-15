@@ -27,17 +27,16 @@
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
   background: linear-gradient(135deg, #8b7355 0%, #6b5344 50%, #5a4636 100%);
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
     inset -2px 0 8px rgba(0, 0, 0, 0.3),
     2px 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .door-open {
-  transform: rotateY(-75deg) 2s;
+  transform: translateX(-95%);
 }
 
 /* Door panels for visual detail */
@@ -95,14 +94,9 @@
 
 /* Hover effect - peek at door (slight open) */
 .door-container-interactive:hover .door:not(.door-open) {
-  transform: rotateY(-35deg);
+  transform: translateX(-15%);
   box-shadow:
     inset -2px 0 8px rgba(0, 0, 0, 0.3),
     2px 0 12px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(139, 115, 85, 0.2);
-}
-
-/* Show hint of interior on hover */
-.door-container-interactive:hover .door-interior:not(.door-interior-visible) {
-  opacity: 0.3;
 }

@@ -1,15 +1,7 @@
 .app {
   width: 100%;
   height: 100%;
-  /* perspective: 100px;
-  perspective-origin: bottom right; */
 }
-
-/* .app-entering-door {
-  pointer-events: none;
-  transform: scale(4);
-  transform-origin: 70% 70%;
-} */
 
 /* ---------- Scene ---------- */
 .scene {
@@ -167,40 +159,29 @@ button:focus-visible {
 
 /* ---------- Door Transition ---------- */
 .scene-entering {
-  animation: enterDoor 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  /* transform-origin: 70% 70%; */
+  animation: enterDoor 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes enterDoor {
   0% {
     transform: scale(1);
-    transform-origin: 90% 70%;
+    transform-origin: 92% 65%;
     opacity: 1;
   }
-  /* 40% {
-    transform: scale(1.5);
-    transform-origin: 70% 70%;
-    opacity: 1;
-  }
-  70% {
-    transform: scale(2.5);
-    transform-origin: 70% 70%;
-    opacity: 0.8;
-  } */
   100% {
     transform: scale(4);
-    transform-origin: 90% 70%;
+    transform-origin: 92% 65%;
     opacity: 0;
   }
 }
 
-/* .door-transition-overlay {
+.door-transition-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 80% 60% at 85% 60%,
+    ellipse 80% 60% at 92% 65%,
     transparent 0%,
     transparent 10%,
     rgba(0, 0, 0, 0.3) 30%,
@@ -224,4 +205,4 @@ button:focus-visible {
     opacity: 1;
     background: #000;
   }
-} */
+}
