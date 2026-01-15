@@ -1,4 +1,4 @@
-import { createSignal, createEffect, Show } from "solid-js";
+import { createSignal, createEffect, Show, onMount, onCleanup } from "solid-js";
 import "./App.css";
 import type { LampPhase } from "./type";
 import { Lamp } from "./Lamp";
@@ -14,9 +14,17 @@ type ContentItem = {
   island: string | null;
 };
 
+type Scene = "office" | "lab";
+
+const getSceneFromHash = (): Scene => {
+  const hash = window.location.hash.slice(1);
+  if (hash === "lab") return "lab";
+  return "office";
+};
+
 const App = () => {
   // ---------- State ----------
-  const [scene, setScene] = createSignal<"office" | "lab">("office");
+  const [scene, setScene] = createSignal<Scene>(getSceneFromHash());
   const [focus, setFocus] = createSignal<string | null>(null);
   const [lampPhase, setLampPhase] = createSignal<LampPhase>("no-lamp");
   const [isLampOn, setIsLampOn] = createSignal(true);
@@ -56,6 +64,29 @@ const App = () => {
 
     setLampPhase("placed");
   };
+
+  // ---------- Hash Routing ----------
+  // Sync hash when scene changes
+  createEffect(() => {
+    const currentScene = scene();
+    const newHash = currentScene === "office" ? "" : currentScene;
+    if (window.location.hash.slice(1) !== newHash) {
+      window.history.pushState(
+        null,
+        "",
+        newHash ? `#${newHash}` : window.location.pathname,
+      );
+    }
+  });
+
+  // Listen for back/forward navigation
+  onMount(() => {
+    const handlePopState = () => {
+      setScene(getSceneFromHash());
+    };
+    window.addEventListener("popstate", handlePopState);
+    onCleanup(() => window.removeEventListener("popstate", handlePopState));
+  });
 
   // Auto-start sequence when entering office
   createEffect(() => {
