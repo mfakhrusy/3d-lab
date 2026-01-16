@@ -65,8 +65,8 @@ export function LabTerminal(props: LabTerminalProps) {
 
   // Welcome sequence
   onMount(async () => {
-    await delay(500);
-    addSystemLine("TERMINAL INITIALIZED");
+    await delay(2500);
+    addSystemLine("----- TERMINAL INITIALIZED -----");
     await delay(300);
     await typeRobotMessage("Welcome to the lab!");
     await delay(800);
