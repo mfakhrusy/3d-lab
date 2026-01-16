@@ -1,19 +1,7 @@
 import { createSignal, createEffect, Show, onMount, onCleanup } from "solid-js";
 import "./App.css";
-import type { LampPhase } from "./type";
-import { Lamp } from "./Lamp";
-import { Clock } from "./Clock";
-import { Calendar } from "./Calendar";
-import { Door } from "./Door";
-import { RobotOffice } from "./Robot/RobotOffice";
-import { RobotProvider } from "./Robot/RobotContext";
+import { Office } from "./Office";
 import { Lab3D } from "./Lab3D";
-
-type ContentItem = {
-  title: string;
-  body: string;
-  island: string | null;
-};
 
 type Scene = "office" | "lab";
 
@@ -24,50 +12,10 @@ const getSceneFromHash = (): Scene => {
 };
 
 const App = () => {
-  // ---------- State ----------
   const [scene, setScene] = createSignal<Scene>(getSceneFromHash());
-  const [focus, setFocus] = createSignal<string | null>(null);
-  const [lampPhase, setLampPhase] = createSignal<LampPhase>("no-lamp");
-  const [isLampOn, setIsLampOn] = createSignal(true);
-  const [isInteractive, setIsInteractive] = createSignal(false);
   const [isEnteringDoor, setIsEnteringDoor] = createSignal(false);
 
-  // ---------- Room Actions ----------
-  const roomActions = {
-    toggleLamp: () => setIsLampOn((prev) => !prev),
-    setLampOn: (on: boolean) => setIsLampOn(on),
-    isLampOn: () => isLampOn(),
-  };
-
-  // ---------- Content ----------
-  const contentByItem: Record<string, ContentItem> = {
-    desk: {
-      title: "Desk",
-      body: "<p>This is where I work on projects and ideas.</p>",
-      island: null,
-    },
-    robot: {
-      title: "Robot",
-      body: "<p>This represents my interest in robotics and AI.</p>",
-      island: null,
-    },
-  };
-
-  // ---------- Lamp Sequence ----------
-  const runLampSequence = async () => {
-    if (lampPhase() !== "no-lamp" || scene() !== "office") return;
-
-    // setLampPhase("placing");
-    // await new Promise((r) => setTimeout(r, 600));
-
-    setLampPhase("brightening");
-    await new Promise((r) => setTimeout(r, 0));
-
-    setLampPhase("placed");
-  };
-
   // ---------- Hash Routing ----------
-  // Sync hash when scene changes
   createEffect(() => {
     const currentScene = scene();
     const newHash = currentScene === "office" ? "" : currentScene;
@@ -80,7 +28,6 @@ const App = () => {
     }
   });
 
-  // Listen for back/forward navigation
   onMount(() => {
     const handlePopState = () => {
       setScene(getSceneFromHash());
@@ -89,54 +36,10 @@ const App = () => {
     onCleanup(() => window.removeEventListener("popstate", handlePopState));
   });
 
-  // Auto-start sequence when entering office
-  createEffect(() => {
-    if (scene() === "office") {
-      setLampPhase("no-lamp");
-      setIsInteractive(false);
-      setTimeout(() => runLampSequence(), 0);
-      // Enable interactivity after lamp animation + room brightening (5s total)
-      setTimeout(() => setIsInteractive(true), 5000);
-    } else {
-      setLampPhase("no-lamp");
-      setIsInteractive(false);
-    }
-  });
-
-  // ---------- Event Router ----------
-  const dispatch = (
-    eventType: "ITEM_FOCUS" | "SCENE_SWITCH" | "OVERLAY_CLOSE",
-    payload?: any,
-  ) => {
-    switch (eventType) {
-      case "ITEM_FOCUS":
-        setFocus(payload.itemId);
-        break;
-      case "SCENE_SWITCH":
-        setScene(payload.sceneId);
-        setFocus(null);
-        break;
-      case "OVERLAY_CLOSE":
-        setFocus(null);
-        break;
-    }
-  };
-
   // ---------- Handlers ----------
-  const handleSceneSwitch = (sceneId: string) => (e: Event) => {
-    e.preventDefault();
-    dispatch("SCENE_SWITCH", { sceneId });
-  };
-
-  const handleClose = (e: Event) => {
-    e.preventDefault();
-    dispatch("OVERLAY_CLOSE");
-  };
-
   const handleDoorEnter = () => {
     if (isEnteringDoor()) return;
     setIsEnteringDoor(true);
-    // After animation completes, switch scene
     setTimeout(() => {
       setScene("lab");
       setIsEnteringDoor(false);
@@ -164,51 +67,9 @@ const App = () => {
         data-scene="office"
         aria-label="Office scene"
       >
-        <div
-          class="room"
-          classList={{
-            brightened:
-              scene() === "office" &&
-              (lampPhase() === "brightening" || lampPhase() === "placed") &&
-              isLampOn(),
-            dimmed:
-              scene() === "office" && lampPhase() === "placed" && !isLampOn(),
-          }}
-          // classList={{ brightened: scene() === "office" }}
-        >
-          {/* <button
-            class="item"
-            data-focus="desk"
-            aria-label="View desk details"
-            onClick={handleItemClick('desk')}
-          >
-            Desk
-          </button> */}
-
-          <Show when={scene() === "office"}>
-            <Lamp isOn={isLampOn()} />
-            <Clock isInteractive={isInteractive()} />
-            <Calendar isInteractive={isInteractive()} />
-            <Door isInteractive={isInteractive()} onEnter={handleDoorEnter} />
-            <RobotProvider>
-              <RobotOffice
-                roomActions={roomActions}
-                isInteractive={isInteractive()}
-              />
-            </RobotProvider>
-          </Show>
-
-          <nav aria-label="Scene navigation">
-            <button
-              class="switch"
-              data-scene="lab"
-              aria-label="Go to Lab"
-              onClick={handleSceneSwitch("lab")}
-            >
-              Go to Lab →
-            </button>
-          </nav>
-        </div>
+        <Show when={scene() === "office"}>
+          <Office onEnterDoor={handleDoorEnter} />
+        </Show>
       </section>
 
       {/* Lab Scene - 3D Room */}
@@ -221,25 +82,6 @@ const App = () => {
         <Show when={scene() === "lab"}>
           <Lab3D onBack={handleLabExit} />
         </Show>
-      </section>
-
-      {/* Overlay */}
-      <section
-        class="overlay"
-        classList={{ active: Boolean(focus()) }}
-        aria-hidden={!focus()}
-        role="dialog"
-        aria-modal="true"
-      >
-        <button class="close" aria-label="Close details" onClick={handleClose}>
-          ✕
-        </button>
-        <div class="content">
-          <Show when={focus()}>
-            <h2>{contentByItem[focus()!].title}</h2>
-            <div innerHTML={contentByItem[focus()!].body} />
-          </Show>
-        </div>
       </section>
     </main>
   );
