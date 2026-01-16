@@ -1,0 +1,186 @@
+.lab-clock {
+  --clock-width: 190px;
+  --clock-height: 70px;
+  --clock-depth: 20px;
+
+  position: relative;
+  width: var(--clock-width);
+  height: var(--clock-height);
+  transform-style: preserve-3d;
+  transform: rotateX(-5deg) rotateY(-10deg);
+}
+
+.lab-clock-face {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+/* Front face - the display */
+.lab-clock-front {
+  width: var(--clock-width);
+  height: var(--clock-height);
+  background: linear-gradient(180deg, #0a0a12 0%, #12121a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 4px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  box-shadow:
+    0 0 20px rgba(56, 189, 248, 0.1),
+    inset 0 0 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform: translateZ(calc(var(--clock-depth) / 2));
+}
+
+/* Back face */
+.lab-clock-back {
+  width: var(--clock-width);
+  height: var(--clock-height);
+  background: #050508;
+  border-radius: 4px;
+  transform: translateZ(calc(var(--clock-depth) / -2)) rotateY(180deg);
+}
+
+/* Top face */
+.lab-clock-top {
+  width: var(--clock-width);
+  height: var(--clock-depth);
+  background: linear-gradient(180deg, #15151f 0%, #0a0a12 100%);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  transform: rotateX(90deg) translateZ(calc(var(--clock-depth) / 2));
+  /* transform-origin: top center; */
+}
+
+/* Bottom face */
+.lab-clock-bottom {
+  width: var(--clock-width);
+  height: var(--clock-depth);
+  top: calc(var(--clock-height) - var(--clock-depth));
+  background: linear-gradient(0deg, #08080c 0%, #0a0a12 100%);
+  border: 1px solid rgba(56, 189, 248, 0.1);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  transform: rotateX(-90deg) translateZ(calc(var(--clock-depth) / 2));
+  /* transform-origin: bottom center; */
+}
+
+/* Left face */
+.lab-clock-left {
+  width: var(--clock-depth);
+  height: var(--clock-height);
+  background: linear-gradient(90deg, #08080c 0%, #0c0c14 100%);
+  border: 1px solid rgba(56, 189, 248, 0.1);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  transform: rotateY(-90deg) translateZ(calc(var(--clock-depth) / 2));
+  /* transform-origin: left center; */
+}
+
+/* Right face */
+.lab-clock-right {
+  width: var(--clock-depth);
+  height: var(--clock-height);
+  left: calc(var(--clock-width) - var(--clock-depth));
+  background: linear-gradient(-90deg, #08080c 0%, #0c0c14 100%);
+  border: 1px solid rgba(56, 189, 248, 0.1);
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  transform: rotateY(90deg) translateZ(calc(var(--clock-depth) / 2));
+  /* transform-origin: right center; */
+}
+
+/* Display content */
+.lab-clock-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: "Courier New", monospace;
+  font-size: 24px;
+  font-weight: bold;
+  color: #38bdf8;
+  text-shadow:
+    0 0 10px rgba(56, 189, 248, 0.8),
+    0 0 20px rgba(56, 189, 248, 0.4);
+  letter-spacing: 2px;
+}
+
+.lab-clock-segment {
+  background: rgba(56, 189, 248, 0.05);
+  padding: 2px 4px;
+  border-radius: 2px;
+  min-width: 28px;
+  text-align: center;
+}
+
+.lab-clock-colon {
+  animation: blink 1s step-end infinite;
+  margin: 0 1px;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.lab-clock-seconds {
+  font-size: 16px;
+  color: rgba(56, 189, 248, 0.6);
+  text-shadow:
+    0 0 8px rgba(56, 189, 248, 0.5),
+    0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.lab-clock-label {
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-size: 7px;
+  color: rgba(56, 189, 248, 0.4);
+  letter-spacing: 3px;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.lab-clock-scanline {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+.lab-clock-front::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(56, 189, 248, 0.05),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}

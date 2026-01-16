@@ -3,6 +3,7 @@ import "./Lab3D.css";
 import { RobotLab } from "./Robot/RobotLab";
 import type { LabActions, LabPaintColor } from "./Robot/types";
 import { LabTerminal } from "./LabTerminal";
+import { LabClock } from "./LabClock";
 
 type Lab3DProps = {
   onBack?: () => void;
@@ -90,7 +91,11 @@ export function Lab3D(props: Lab3DProps) {
         <div class="lab-wall lab-wall-left" />
 
         {/* Right wall */}
-        <div class="lab-wall lab-wall-right" />
+        <div class="lab-wall lab-wall-right">
+          <div class="lab-clock-wrapper">
+            <LabClock />
+          </div>
+        </div>
 
         {/* Floor */}
         <div class="lab-wall lab-wall-floor" />

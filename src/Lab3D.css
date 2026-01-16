@@ -213,3 +213,12 @@
   border-color: rgba(56, 189, 248, 0.5);
   color: #38bdf8;
 }
+
+/* Clock on right wall */
+.lab-clock-wrapper {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
