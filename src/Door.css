@@ -9,6 +9,352 @@
   z-index: 5;
 }
 
+/* ========== CARTOON SIGNS & ARROWS ========== */
+
+.door-signs {
+  position: absolute;
+  inset: -120px -150px -60px -150px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Big flashy ENTER HERE sign */
+.sign-enter-here {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-5deg);
+  background: linear-gradient(
+    135deg,
+    #ff2a6d 0%,
+    #ff6b2b 25%,
+    #ffea00 50%,
+    #ff6b2b 75%,
+    #ff2a6d 100%
+  );
+  background-size: 200% 200%;
+  animation:
+    gradient-shift 1s ease infinite,
+    wobble 0.5s ease-in-out infinite;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 3px solid #fff;
+  box-shadow:
+    0 0 20px rgba(255, 42, 109, 0.8),
+    0 0 40px rgba(255, 234, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.sign-text {
+  font-family: "Comic Sans MS", "Chalkboard", cursive, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow:
+    2px 2px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  letter-spacing: 1px;
+}
+
+/* Sparkles on the sign */
+.sign-sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  animation: sparkle-pop 0.8s ease-in-out infinite;
+}
+
+.sign-sparkle.s1 {
+  top: -4px;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.sign-sparkle.s2 {
+  top: -6px;
+  right: 20%;
+  animation-delay: 0.3s;
+}
+
+.sign-sparkle.s3 {
+  bottom: -4px;
+  right: 10%;
+  animation-delay: 0.6s;
+}
+
+/* Curved arrow from top */
+.arrow-curved-top {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  color: #00ff88;
+  text-shadow:
+    0 0 10px #00ff88,
+    0 0 20px #00ff88,
+    0 0 30px #00ff88;
+  animation: bounce-down 0.6s ease-in-out infinite;
+}
+
+/* Left arrow with text */
+.arrow-left {
+  position: absolute;
+  left: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: bounce-right 0.5s ease-in-out infinite;
+}
+
+.arrow-left span:first-child {
+  font-size: 32px;
+  color: #ff00ff;
+  text-shadow:
+    0 0 10px #ff00ff,
+    0 0 20px #ff00ff;
+}
+
+.arrow-text {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  color: #000;
+  background: linear-gradient(90deg, #ff00ff, #00ffff);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  animation: color-flash 0.3s ease infinite alternate;
+}
+
+/* Curved SVG arrow */
+.curved-arrow {
+  position: absolute;
+  left: 50px;
+  top: 60px;
+  width: 100px;
+  height: 80px;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.6))
+    drop-shadow(0 0 16px rgba(255, 234, 0, 0.4));
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.6))
+      drop-shadow(0 0 16px rgba(255, 234, 0, 0.4));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(255, 0, 255, 0.9))
+      drop-shadow(0 0 24px rgba(255, 234, 0, 0.7));
+    transform: scale(1.05);
+  }
+}
+
+/* Right arrow */
+.arrow-right {
+  position: absolute;
+  right: 73px;
+  top: 40%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  animation: bounce-left 0.5s ease-in-out infinite;
+}
+
+.arrow-right .arrow-text {
+  margin-bottom: -20px;
+}
+
+.arrow-right span:last-child {
+  font-size: 50px;
+  color: #00ffff;
+  text-shadow:
+    0 0 10px #00ffff,
+    0 0 20px #00ffff;
+}
+
+/* Bottom text */
+.sign-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.wavy-text {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  background: linear-gradient(
+    90deg,
+    #ff2a6d,
+    #ffea00,
+    #00ff88,
+    #00ffff,
+    #ff00ff
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow-shift 1s linear infinite;
+  text-shadow: none;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+/* Floating sparkles */
+.sparkle {
+  position: absolute;
+  font-size: 16px;
+  animation: float-sparkle 1.5s ease-in-out infinite;
+}
+
+.sparkle.sp1 {
+  top: 60px;
+  left: 5px;
+  color: #ff2a6d;
+  animation-delay: 0s;
+}
+
+.sparkle.sp2 {
+  top: 30px;
+  right: 30px;
+  color: #ffea00;
+  animation-delay: 0.3s;
+}
+
+.sparkle.sp3 {
+  bottom: 80px;
+  left: 10px;
+  color: #00ff88;
+  animation-delay: 0.6s;
+}
+
+.sparkle.sp4 {
+  bottom: 100px;
+  right: 10px;
+  color: #00ffff;
+  animation-delay: 0.9s;
+}
+
+.sparkle.sp5 {
+  top: 50%;
+  right: 0px;
+  color: #ff00ff;
+  font-size: 20px;
+  animation-delay: 0.2s;
+}
+
+/* ========== ANIMATIONS ========== */
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes wobble {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-5deg) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) rotate(5deg) scale(1.05);
+  }
+}
+
+@keyframes sparkle-pop {
+  0%,
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-down {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+@keyframes bounce-right {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(8px);
+  }
+}
+
+@keyframes bounce-left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+}
+
+@keyframes color-flash {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.4);
+  }
+}
+
+@keyframes rainbow-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes float-sparkle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-8px) rotate(15deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(8px) rotate(-15deg);
+  }
+}
+
 .door-frame {
   position: relative;
   width: 100%;
