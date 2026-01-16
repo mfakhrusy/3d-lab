@@ -1,22 +1,9 @@
-import { createSignal, onMount, Show } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import { RobotBase, type RobotView } from "./RobotBase";
-import { SpeechBubble } from "./SpeechBubble";
-import { ChatPanel } from "./ChatPanel";
-import { parseLabCommand } from "./commands/labCommands";
 import type { LabActions } from "./types";
 import "./RobotLab.css";
 
-const labSentences = [
-  "Welcome to the lab!",
-  " Try saying 'paint it green' or 'make it red'!",
-];
-
-type RobotLabPhase =
-  | "waiting"
-  | "entering"
-  | "arrived"
-  | "talking"
-  | "chatting";
+type RobotLabPhase = "waiting" | "entering" | "arrived" | "terminal";
 
 type RobotLabProps = {
   labActions: LabActions;
@@ -44,24 +31,12 @@ export function RobotLab(props: RobotLabProps) {
       setPhase("arrived");
     }, 4200);
 
-    // Start talking
+    // Show terminal
     setTimeout(() => {
-      setPhase("talking");
+      setPhase("terminal");
+      props.onEntryComplete?.();
     }, 4700);
   });
-
-  const handleSpeechComplete = () => {
-    setIsTalking(false);
-    setPhase("chatting");
-    props.onEntryComplete?.();
-  };
-
-  const handleRobotClick = (e: Event) => {
-    e.stopPropagation();
-    if (phase() === "arrived") {
-      setPhase("chatting");
-    }
-  };
 
   return (
     <div
@@ -69,12 +44,8 @@ export function RobotLab(props: RobotLabProps) {
       classList={{
         "robot-lab-waiting": phase() === "waiting",
         "robot-lab-entering": phase() === "entering",
-        "robot-lab-arrived":
-          phase() === "arrived" ||
-          phase() === "talking" ||
-          phase() === "chatting",
+        "robot-lab-arrived": phase() === "arrived" || phase() === "terminal",
       }}
-      onClick={handleRobotClick}
     >
       <div class="robot-lab-body">
         <RobotBase
@@ -83,30 +54,6 @@ export function RobotLab(props: RobotLabProps) {
           isInteractive={true}
         />
       </div>
-
-      {/* Speech bubble during intro */}
-      <Show when={phase() === "talking"}>
-        <div class="robot-lab-speech">
-          <SpeechBubble
-            sentences={labSentences}
-            startDelay={0}
-            onTalkingChange={setIsTalking}
-            onComplete={handleSpeechComplete}
-          />
-        </div>
-      </Show>
-
-      {/* Chat panel after intro */}
-      <Show when={phase() === "chatting"}>
-        <div class="robot-lab-chat">
-          <ChatPanel
-            onTalkingChange={setIsTalking}
-            actions={props.labActions}
-            parseCommand={parseLabCommand}
-            welcomeMessage="Try changing the lab colors! Say 'paint it green' or 'make it red'."
-          />
-        </div>
-      </Show>
     </div>
   );
 }

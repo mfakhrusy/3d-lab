@@ -1,7 +1,8 @@
-import { createSignal, onMount } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import "./Lab3D.css";
 import { RobotLab } from "./Robot/RobotLab";
 import type { LabActions, LabPaintColor } from "./Robot/types";
+import { LabTerminal } from "./LabTerminal";
 
 type Lab3DProps = {
   onBack?: () => void;
@@ -56,6 +57,7 @@ export function Lab3D(props: Lab3DProps) {
   const labActions: LabActions = {
     setPaintColor: (color) => setPaintColor(color),
     getPaintColor: () => paintColor(),
+    goToOffice: () => props.onBack?.(),
   };
 
   const palette = () => colorPalettes[paintColor()];
@@ -96,14 +98,11 @@ export function Lab3D(props: Lab3DProps) {
         {/* Ceiling */}
         <div class="lab-wall lab-wall-ceiling" />
 
-        {/* Robot enters from behind */}
         <RobotLab labActions={labActions} />
       </div>
-
-      {/* Back button outside the 3D space */}
-      <button class="lab-back-button" onClick={props.onBack}>
-        ← Exit Lab
-      </button>
+      <Show when={!isEntering()}>
+        <LabTerminal labActions={labActions} handleBack={props.onBack} />
+      </Show>
     </div>
   );
 }

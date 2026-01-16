@@ -71,5 +71,10 @@ export function parseLabCommand(
     return { handled: true, response: colorResponses[directColor] };
   }
 
+  if (lower.includes("go to office")) {
+    actions.goToOffice();
+    return { handled: true, response: "Going to the office..." };
+  }
+
   return { handled: false, response: "" };
 }

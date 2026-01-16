@@ -11,6 +11,7 @@ export type LabPaintColor = "blue" | "green" | "red" | "white" | "black";
 export type LabActions = {
   setPaintColor: (color: LabPaintColor) => void;
   getPaintColor: () => LabPaintColor;
+  goToOffice: () => void;
 };
 
 // Union type for all scene actions
