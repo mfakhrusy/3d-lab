@@ -9,9 +9,24 @@ import "./RobotOffice.css";
 
 export type { OfficeActions };
 
+const welcomeSentences = [
+  "Hello, this is Flo. ",
+  "I'm just a robot companion. ",
+  "My creator is Fahru, ",
+  "a software engineer. ",
+  "This place is a way for him to express himself. ",
+  "Enjoy your visit! ",
+  "Hint: ",
+  "You probably want to open the door.",
+];
+
+const dangerButtonSentences = ["Hey, don't you dare clicking it!"];
+
 type RobotOfficeProps = {
   roomActions: OfficeActions;
   isInteractive: boolean;
+  isDangerHovered?: boolean;
+  onResetDangerHover?: () => void;
 };
 
 export function RobotOffice(props: RobotOfficeProps) {
@@ -19,15 +34,25 @@ export function RobotOffice(props: RobotOfficeProps) {
   const [isChatMode, setIsChatMode] = createSignal(false);
   const [isWelcomeStarted, setIsWelcomeStarted] = createSignal(false);
   const [isWelcomeComplete, setIsWelcomeComplete] = createSignal(false);
+  const [hasShownInitial, setHasShownInitial] = createSignal(false);
+
+  const currentSentences = () =>
+    props.isDangerHovered ? dangerButtonSentences : welcomeSentences;
 
   const handleRobotClick = (e: Event) => {
     e.stopPropagation();
     if (!props.isInteractive) return;
     setIsChatMode(true);
+    props.onResetDangerHover?.();
   };
 
   const handleBackdropClick = () => {
     setIsChatMode(false);
+  };
+
+  const handleSpeechStart = () => {
+    setIsWelcomeStarted(true);
+    setHasShownInitial(true);
   };
 
   return (
@@ -49,8 +74,10 @@ export function RobotOffice(props: RobotOfficeProps) {
         />
         <Show when={!isChatMode()}>
           <SpeechBubble
+            sentences={currentSentences()}
+            startDelay={hasShownInitial() ? 0 : 5000}
             onTalkingChange={setIsTalking}
-            onStart={() => setIsWelcomeStarted(true)}
+            onStart={handleSpeechStart}
             onComplete={() => setIsWelcomeComplete(true)}
           />
         </Show>

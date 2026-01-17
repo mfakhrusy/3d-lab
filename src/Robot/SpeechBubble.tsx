@@ -1,19 +1,8 @@
-import { createSignal, onMount, Show } from "solid-js";
+import { createSignal, createEffect, onMount, Show } from "solid-js";
 import "./SpeechBubble.css";
 
-const welcomeSentences = [
-  "Hello, this is Flo. ",
-  "I'm just a robot companion. ",
-  "My creator is Fahru, ",
-  "a software engineer. ",
-  "This place is a way for him to express himself. ",
-  "Enjoy your visit! ",
-  "Hint: ",
-  "You probably want to open the door.",
-];
-
 type SpeechBubbleProps = {
-  sentences?: string[];
+  sentences: string[];
   startDelay?: number;
   onTalkingChange?: (isTalking: boolean) => void;
   onStart?: () => void;
@@ -23,21 +12,29 @@ type SpeechBubbleProps = {
 export function SpeechBubble(props: SpeechBubbleProps) {
   const [displayedText, setDisplayedText] = createSignal("");
   const [isVisible, setIsVisible] = createSignal(false);
+  let abortController: { aborted: boolean } = { aborted: false };
 
-  const sentences = () => props.sentences ?? welcomeSentences;
   const startDelay = () => props.startDelay ?? 5000;
 
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  const animateSentences = async () => {
+  const animateSentences = async (
+    sentenceList: string[],
+    controller: { aborted: boolean },
+  ) => {
     let currentText = "";
-    const sentenceList = sentences();
 
     for (const sentence of sentenceList) {
+      if (controller.aborted) return;
+
       props.onTalkingChange?.(true);
 
       for (let i = 0; i < sentence.length; i++) {
+        if (controller.aborted) {
+          props.onTalkingChange?.(false);
+          return;
+        }
         currentText += sentence[i];
         setDisplayedText(currentText);
         await delay(50);
@@ -50,15 +47,29 @@ export function SpeechBubble(props: SpeechBubbleProps) {
       }
     }
 
-    props.onComplete?.();
+    if (!controller.aborted) {
+      props.onComplete?.();
+    }
   };
 
   onMount(() => {
     setTimeout(() => {
       setIsVisible(true);
       props.onStart?.();
-      animateSentences();
+      animateSentences(props.sentences, abortController);
     }, startDelay());
+  });
+
+  createEffect((prevSentences: string[] | undefined) => {
+    const currentSentences = props.sentences;
+    if (prevSentences && prevSentences !== currentSentences) {
+      abortController.aborted = true;
+      abortController = { aborted: false };
+      setDisplayedText("");
+      setIsVisible(true);
+      animateSentences(currentSentences, abortController);
+    }
+    return currentSentences;
   });
 
   const bubbleWidth = 400;
