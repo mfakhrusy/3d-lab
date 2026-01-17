@@ -55,11 +55,15 @@ const colorPalettes: Record<
 export function Lab3D(props: Lab3DProps) {
   const [isEntering, setIsEntering] = createSignal(true);
   const [paintColor, setPaintColor] = createSignal<LabPaintColor>("blue");
+  const [webpageVisible, setWebpageVisible] = createSignal(false);
 
   const labActions: LabActions = {
     setPaintColor: (color) => setPaintColor(color),
     getPaintColor: () => paintColor(),
     goToOffice: () => props.onBack?.(),
+    showWebpage: () => setWebpageVisible(true),
+    hideWebpage: () => setWebpageVisible(false),
+    isWebpageVisible: () => webpageVisible(),
   };
 
   const palette = () => colorPalettes[paintColor()];
@@ -84,7 +88,16 @@ export function Lab3D(props: Lab3DProps) {
       >
         <div class="lab-room" classList={{ "lab-room-entering": isEntering() }}>
           {/* Back wall - facing us */}
-          <div class="lab-wall lab-wall-back" />
+          <div class="lab-wall lab-wall-back">
+            <Show when={webpageVisible()}>
+              <iframe
+                class="lab-back-iframe"
+                src="https://www.youtube.com/embed/R0NME9W3cR4?autoplay=1&loop=1&playlist=R0NME9W3cR4&start=60&controls=0&modestbranding=1&showinfo=0&rel=0"
+                title="Rain sounds"
+                allow="autoplay; fullscreen"
+              />
+            </Show>
+          </div>
 
           {/* Front wall - where we entered (transparent) */}
           <div class="lab-wall lab-wall-front" />

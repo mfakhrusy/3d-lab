@@ -76,5 +76,23 @@ export function parseLabCommand(
     return { handled: true, response: "Going to the office..." };
   }
 
+  // Rain sound command
+  if (
+    lower.includes("play rain") ||
+    lower.includes("rain sound") ||
+    lower.includes("play rain sound")
+  ) {
+    actions.showWebpage();
+    return {
+      handled: true,
+      response: "Playing rain sounds... relax and enjoy.",
+    };
+  }
+
+  if (lower.includes("stop rain") || lower.includes("stop sound")) {
+    actions.hideWebpage();
+    return { handled: true, response: "Stopping the rain sounds." };
+  }
+
   return { handled: false, response: "" };
 }

@@ -12,6 +12,9 @@ export type LabActions = {
   setPaintColor: (color: LabPaintColor) => void;
   getPaintColor: () => LabPaintColor;
   goToOffice: () => void;
+  showWebpage: () => void;
+  hideWebpage: () => void;
+  isWebpageVisible: () => boolean;
 };
 
 // Union type for all scene actions

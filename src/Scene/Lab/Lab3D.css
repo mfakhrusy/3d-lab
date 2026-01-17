@@ -222,3 +222,28 @@
   transform: translateX(-50%);
   z-index: 10;
 }
+
+/* Back wall iframe */
+.lab-back-iframe {
+  position: absolute;
+  inset: 0;
+  width: 115%;
+  height: 100%;
+  border: none;
+  background: #000;
+  opacity: 0;
+  animation: fadeInIframe 1s ease-out 5s forwards;
+}
+
+/* TODO: tweak this to not show the video title */
+@keyframes fadeInIframe {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
