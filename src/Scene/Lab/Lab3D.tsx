@@ -73,7 +73,10 @@ export function Lab3D(props: Lab3DProps) {
     showHelp: () => setHelpExpanded(true),
     hideHelp: () => setHelpExpanded(false),
     isHelpVisible: () => helpExpanded(),
-    showCanvas: () => setCanvasVisible(true),
+    showCanvas: async () => {
+      await new Promise((r) => setTimeout(r, 600));
+      setCanvasVisible(true);
+    },
     hideCanvas: () => setCanvasVisible(false),
     isCanvasVisible: () => canvasVisible(),
   };
@@ -133,7 +136,7 @@ export function Lab3D(props: Lab3DProps) {
           {/* Ceiling */}
           <div class="lab-wall lab-wall-ceiling" />
 
-          <RobotLab />
+          <RobotLab hidden={canvasVisible()} />
         </div>
         <Show when={!isEntering()}>
           <LabTerminal labActions={labActions} handleBack={props.onBack} />

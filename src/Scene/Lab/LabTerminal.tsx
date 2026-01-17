@@ -92,6 +92,13 @@ export function LabTerminal(props: LabTerminalProps) {
 
     if (result.handled) {
       await typeRobotMessage(result.response);
+
+      // Handle follow-up message if present
+      if (result.followUp) {
+        const followUpResponse = await result.followUp();
+        await delay(300);
+        await typeRobotMessage(followUpResponse);
+      }
     } else {
       await typeRobotMessage("Command not recognized. Try 'paint it [color]'.");
     }

@@ -39,6 +39,22 @@
   transform: translate(-50%, -50%) translateZ(-200px);
 }
 
+/* Hidden state - slide out to the side */
+.robot-lab-hidden {
+  animation: robotLabHide 0.5s ease-in forwards;
+}
+
+@keyframes robotLabHide {
+  0% {
+    transform: translate(-50%, -50%) translateZ(-200px);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-150%, -50%) translateZ(-200px);
+    opacity: 0;
+  }
+}
+
 /* Robot body container for flip effect */
 .robot-lab-body {
   position: relative;

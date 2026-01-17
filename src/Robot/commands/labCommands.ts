@@ -130,8 +130,14 @@ export function parseLabCommand(
     if (actions.isCanvasVisible()) {
       return { handled: true, response: "The canvas is already on the wall!" };
     }
-    actions.showCanvas();
-    return { handled: true, response: "Here's a canvas for you. Draw freely!" };
+    return {
+      handled: true,
+      response: "Oops, let me hide first...",
+      followUp: async () => {
+        await actions.showCanvas();
+        return "I'm hidden now. Here's a canvas for you. Draw freely!";
+      },
+    };
   }
 
   if (lower.includes("hide canvas") || lower.includes("close canvas")) {
@@ -139,7 +145,7 @@ export function parseLabCommand(
       return { handled: true, response: "There's no canvas to hide." };
     }
     actions.hideCanvas();
-    return { handled: true, response: "Canvas hidden." };
+    return { handled: true, response: "Canvas hidden. I'm back!" };
   }
 
   return { handled: false, response: "" };

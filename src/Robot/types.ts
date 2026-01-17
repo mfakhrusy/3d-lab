@@ -18,7 +18,7 @@ export type LabActions = {
   showHelp: () => void;
   hideHelp: () => void;
   isHelpVisible: () => boolean;
-  showCanvas: () => void;
+  showCanvas: () => Promise<void>;
   hideCanvas: () => void;
   isCanvasVisible: () => boolean;
 };
@@ -30,6 +30,7 @@ export type SceneActions = OfficeActions | LabActions;
 export type CommandResult = {
   handled: boolean;
   response: string;
+  followUp?: () => Promise<string>;
 };
 
 // Command parser function type

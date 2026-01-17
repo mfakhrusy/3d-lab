@@ -7,6 +7,7 @@ type RobotLabPhase = "waiting" | "entering" | "arrived" | "terminal";
 
 type RobotLabProps = {
   onEntryComplete?: () => void;
+  hidden?: boolean;
 };
 
 export function RobotLab(props: RobotLabProps) {
@@ -44,6 +45,7 @@ export function RobotLab(props: RobotLabProps) {
         "robot-lab-waiting": phase() === "waiting",
         "robot-lab-entering": phase() === "entering",
         "robot-lab-arrived": phase() === "arrived" || phase() === "terminal",
+        "robot-lab-hidden": props.hidden,
       }}
     >
       <div class="robot-lab-body">
