@@ -1,11 +1,11 @@
 import { createSignal, createEffect } from "solid-js";
-import type { LampPhase } from "./type";
+import type { LampPhase } from "../../type";
 import { Lamp } from "./Lamp";
 import { Clock } from "./Clock";
 import { Calendar } from "./Calendar";
 import { Door } from "./Door";
-import { RobotOffice } from "./Robot/RobotOffice";
-import { RobotProvider } from "./Robot/RobotContext";
+import { RobotOffice } from "../../Robot/RobotOffice";
+import { RobotProvider } from "../../Robot/RobotContext";
 
 type OfficeProps = {
   onEnterDoor: () => void;

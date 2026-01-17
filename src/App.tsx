@@ -1,7 +1,7 @@
 import { createSignal, createEffect, Show, onMount, onCleanup } from "solid-js";
 import "./App.css";
-import { Office } from "./Office";
-import { Lab3D } from "./Lab3D";
+import { Office } from "./Scene/Office/Office";
+import { Lab3D } from "./Scene/Lab/Lab3D";
 
 type Scene = "office" | "lab";
 

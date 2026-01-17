@@ -1,8 +1,8 @@
 import { createSignal, onMount, Show } from "solid-js";
 import "./Lab3D.css";
-import { RobotLab } from "./Robot/RobotLab";
-import { RobotProvider } from "./Robot/RobotContext";
-import type { LabActions, LabPaintColor } from "./Robot/types";
+import { RobotLab } from "../../Robot/RobotLab";
+import { RobotProvider } from "../../Robot/RobotContext";
+import type { LabActions, LabPaintColor } from "../../Robot/types";
 import { LabTerminal } from "./LabTerminal";
 import { LabClock } from "./LabClock";
 

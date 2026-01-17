@@ -1,7 +1,7 @@
 import { createSignal, onMount, For, createEffect } from "solid-js";
-import { parseLabCommand } from "./Robot/commands/labCommands";
-import type { LabActions } from "./Robot/types";
-import { useRobot } from "./Robot/RobotContext";
+import { parseLabCommand } from "../../Robot/commands/labCommands";
+import type { LabActions } from "../../Robot/types";
+import { useRobot } from "../../Robot/RobotContext";
 import "./LabTerminal.css";
 
 type TerminalLine = {
