@@ -4,6 +4,7 @@ import { RobotLab } from "../../Robot/RobotLab";
 import { RobotProvider } from "../../Robot/RobotContext";
 import type { LabActions, LabPaintColor } from "../../Robot/types";
 import { LabTerminal } from "./LabTerminal";
+import { HelpTerminal } from "./HelpTerminal";
 import { LabClock } from "./LabClock";
 
 type Lab3DProps = {
@@ -56,6 +57,7 @@ export function Lab3D(props: Lab3DProps) {
   const [isEntering, setIsEntering] = createSignal(true);
   const [paintColor, setPaintColor] = createSignal<LabPaintColor>("blue");
   const [webpageVisible, setWebpageVisible] = createSignal(false);
+  const [helpExpanded, setHelpExpanded] = createSignal(false);
 
   const labActions: LabActions = {
     setPaintColor: (color) => setPaintColor(color),
@@ -64,6 +66,9 @@ export function Lab3D(props: Lab3DProps) {
     showWebpage: () => setWebpageVisible(true),
     hideWebpage: () => setWebpageVisible(false),
     isWebpageVisible: () => webpageVisible(),
+    showHelp: () => setHelpExpanded(true),
+    hideHelp: () => setHelpExpanded(false),
+    isHelpVisible: () => helpExpanded(),
   };
 
   const palette = () => colorPalettes[paintColor()];
@@ -122,6 +127,11 @@ export function Lab3D(props: Lab3DProps) {
         </div>
         <Show when={!isEntering()}>
           <LabTerminal labActions={labActions} handleBack={props.onBack} />
+          <HelpTerminal
+            expanded={helpExpanded()}
+            onMinimize={() => setHelpExpanded(false)}
+            onExpand={() => setHelpExpanded(true)}
+          />
         </Show>
       </div>
     </RobotProvider>

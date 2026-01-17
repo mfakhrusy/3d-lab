@@ -94,5 +94,36 @@ export function parseLabCommand(
     return { handled: true, response: "Stopping the rain sounds." };
   }
 
+  // Help commands
+  if (
+    lower === "help" ||
+    lower.includes("show help") ||
+    lower.includes("what command") ||
+    lower.includes("available command") ||
+    lower.includes("list command")
+  ) {
+    if (actions.isHelpVisible()) {
+      return { handled: true, response: "The help terminal is already open." };
+    }
+    actions.showHelp();
+    return { handled: true, response: "Opening help panel..." };
+  }
+
+  if (lower.includes("hide help") || lower.includes("close help")) {
+    actions.hideHelp();
+    return { handled: true, response: "Closing help panel." };
+  }
+
   return { handled: false, response: "" };
 }
+
+export const labHelpCommands = [
+  {
+    command: "paint it [color]",
+    description: "Change wall color (blue, green, red, white, black)",
+  },
+  { command: "play rain", description: "Play rain sounds on the back wall" },
+  { command: "stop rain", description: "Stop rain sounds" },
+  { command: "go to office", description: "Return to the office scene" },
+  { command: "help", description: "Show this help panel" },
+];
