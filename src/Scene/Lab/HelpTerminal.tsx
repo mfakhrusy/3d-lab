@@ -57,9 +57,6 @@ export function HelpTerminal(props: HelpTerminalProps) {
               )}
             </For>
           </div>
-
-          {/* Scanline effect */}
-          <div class="lab-terminal-scanline" />
         </div>
       </Show>
 

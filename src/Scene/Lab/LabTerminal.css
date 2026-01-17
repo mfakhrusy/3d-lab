@@ -187,21 +187,6 @@
   opacity: 0.5;
 }
 
-/* Scanline overlay */
-.lab-terminal-scanline {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(56, 189, 248, 0.015) 2px,
-    rgba(56, 189, 248, 0.015) 4px
-  );
-  border-radius: 6px;
-}
-
 /* Blinking cursor effect */
 .lab-terminal-input:focus::after {
   content: "▋";
