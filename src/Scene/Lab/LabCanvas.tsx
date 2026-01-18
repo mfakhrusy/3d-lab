@@ -1,5 +1,6 @@
 import { onMount, onCleanup, createSignal } from "solid-js";
 import "./LabCanvas.css";
+import { useTerminalInteraction } from "./TerminalInteractionContext";
 
 type LabCanvasProps = {
   backWallRef: HTMLDivElement | undefined;
@@ -7,6 +8,7 @@ type LabCanvasProps = {
 };
 
 export function LabCanvas(props: LabCanvasProps) {
+  const { isInteracting } = useTerminalInteraction();
   let canvasRef: HTMLCanvasElement | undefined;
   let ctx: CanvasRenderingContext2D | null = null;
   let isDrawing = false;
@@ -53,6 +55,7 @@ export function LabCanvas(props: LabCanvasProps) {
   };
 
   const handleMouseDown = (e: MouseEvent) => {
+    if (isInteracting()) return;
     const coords = getCanvasCoords(e);
     if (coords) {
       isDrawing = true;
@@ -62,9 +65,9 @@ export function LabCanvas(props: LabCanvasProps) {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    setIsHovering(isOverCanvas(e));
+    setIsHovering(isOverCanvas(e) && !isInteracting());
 
-    if (!isDrawing || !ctx) return;
+    if (isInteracting() || !isDrawing || !ctx) return;
 
     const coords = getCanvasCoords(e);
     if (coords) {

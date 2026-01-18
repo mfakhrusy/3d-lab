@@ -8,6 +8,7 @@ import { HelpTerminal } from "./HelpTerminal";
 import { LabCanvas } from "./LabCanvas";
 import { CanvasControls } from "./CanvasControls";
 import { LabClock } from "./LabClock";
+import { TerminalInteractionProvider } from "./TerminalInteractionContext";
 
 type Lab3DProps = {
   onBack?: () => void;
@@ -93,68 +94,76 @@ export function Lab3D(props: Lab3DProps) {
   });
 
   return (
-    <RobotProvider>
-      <div
-        class="lab-container"
-        style={{
-          "--lab-primary": palette().primary,
-          "--lab-secondary": palette().secondary,
-          "--lab-dark": palette().dark,
-          "--lab-accent": palette().accent,
-        }}
-      >
-        <div class="lab-room" classList={{ "lab-room-entering": isEntering() }}>
-          {/* Back wall - facing us */}
-          <div ref={backWallRef} class="lab-wall lab-wall-back">
-            <Show when={webpageVisible()}>
-              <iframe
-                class="lab-back-iframe"
-                src="https://www.youtube.com/embed/R0NME9W3cR4?autoplay=1&loop=1&playlist=R0NME9W3cR4&start=60&controls=0&modestbranding=1&showinfo=0&rel=0"
-                title="Rain sounds"
-                allow="autoplay; fullscreen"
+    <TerminalInteractionProvider>
+      <RobotProvider>
+        <div
+          class="lab-container"
+          style={{
+            "--lab-primary": palette().primary,
+            "--lab-secondary": palette().secondary,
+            "--lab-dark": palette().dark,
+            "--lab-accent": palette().accent,
+          }}
+        >
+          <div
+            class="lab-room"
+            classList={{ "lab-room-entering": isEntering() }}
+          >
+            {/* Back wall - facing us */}
+            <div ref={backWallRef} class="lab-wall lab-wall-back">
+              <Show when={webpageVisible()}>
+                <iframe
+                  class="lab-back-iframe"
+                  src="https://www.youtube.com/embed/R0NME9W3cR4?autoplay=1&loop=1&playlist=R0NME9W3cR4&start=60&controls=0&modestbranding=1&showinfo=0&rel=0"
+                  title="Rain sounds"
+                  allow="autoplay; fullscreen"
+                />
+              </Show>
+              <Show when={canvasVisible()}>
+                <LabCanvas
+                  backWallRef={backWallRef}
+                  brushColor={brushColor()}
+                />
+              </Show>
+            </div>
+
+            {/* Front wall - where we entered (transparent) */}
+            <div class="lab-wall lab-wall-front" />
+
+            {/* Left wall */}
+            <div class="lab-wall lab-wall-left" />
+
+            {/* Right wall */}
+            <div class="lab-wall lab-wall-right">
+              <div class="lab-clock-wrapper">
+                <LabClock />
+              </div>
+            </div>
+
+            {/* Floor */}
+            <div class="lab-wall lab-wall-floor" />
+
+            {/* Ceiling */}
+            <div class="lab-wall lab-wall-ceiling" />
+
+            <RobotLab hidden={canvasVisible()} />
+          </div>
+          <Show when={!isEntering()}>
+            <LabTerminal labActions={labActions} handleBack={props.onBack} />
+            <HelpTerminal
+              expanded={helpExpanded()}
+              onMinimize={() => setHelpExpanded(false)}
+              onExpand={() => setHelpExpanded(true)}
+            />
+            <Show when={canvasVisible()}>
+              <CanvasControls
+                brushColor={brushColor()}
+                onColorChange={setBrushColor}
               />
             </Show>
-            <Show when={canvasVisible()}>
-              <LabCanvas backWallRef={backWallRef} brushColor={brushColor()} />
-            </Show>
-          </div>
-
-          {/* Front wall - where we entered (transparent) */}
-          <div class="lab-wall lab-wall-front" />
-
-          {/* Left wall */}
-          <div class="lab-wall lab-wall-left" />
-
-          {/* Right wall */}
-          <div class="lab-wall lab-wall-right">
-            <div class="lab-clock-wrapper">
-              <LabClock />
-            </div>
-          </div>
-
-          {/* Floor */}
-          <div class="lab-wall lab-wall-floor" />
-
-          {/* Ceiling */}
-          <div class="lab-wall lab-wall-ceiling" />
-
-          <RobotLab hidden={canvasVisible()} />
-        </div>
-        <Show when={!isEntering()}>
-          <LabTerminal labActions={labActions} handleBack={props.onBack} />
-          <HelpTerminal
-            expanded={helpExpanded()}
-            onMinimize={() => setHelpExpanded(false)}
-            onExpand={() => setHelpExpanded(true)}
-          />
-          <Show when={canvasVisible()}>
-            <CanvasControls
-              brushColor={brushColor()}
-              onColorChange={setBrushColor}
-            />
           </Show>
-        </Show>
-      </div>
-    </RobotProvider>
+        </div>
+      </RobotProvider>
+    </TerminalInteractionProvider>
   );
 }

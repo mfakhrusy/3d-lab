@@ -3,10 +3,12 @@ import {
   onMount,
   onCleanup,
   Show,
+  createEffect,
   type JSX,
   type Accessor,
 } from "solid-js";
 import "./DraggableTerminal.css";
+import { useTerminalInteraction } from "./TerminalInteractionContext";
 
 type Position = { x: number; y: number };
 type Size = { width: number; height: number };
@@ -28,6 +30,7 @@ export type DraggableTerminalProps = {
 };
 
 export function DraggableTerminal(props: DraggableTerminalProps) {
+  const { setInteracting } = useTerminalInteraction();
   const minWidth = props.minSize?.width ?? 300;
   const minHeight = props.minSize?.height ?? 150;
 
@@ -52,6 +55,10 @@ export function DraggableTerminal(props: DraggableTerminalProps) {
     y: 0,
   });
   const [initialized, setInitialized] = createSignal(false);
+
+  createEffect(() => {
+    setInteracting(isDragging() || isResizing());
+  });
 
   onMount(() => {
     if (!props.initialPosition) {
