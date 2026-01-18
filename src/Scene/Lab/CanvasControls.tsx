@@ -1,4 +1,3 @@
-// TODO: slider is still buggy -> when clicking the preset, slider should reset, but it doesn't
 import { createSignal, For } from "solid-js";
 import "./LabTerminal.css";
 
@@ -17,6 +16,38 @@ const PRESET_COLORS = [
   "#c0c0c0",
 ];
 
+function hexToHsl(hex: string): { h: number; s: number; l: number } {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+
+  if (max === min) {
+    return { h: 0, s: 0, l: Math.round(l * 100) };
+  }
+
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+  let h = 0;
+  if (max === r) {
+    h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  } else if (max === g) {
+    h = ((b - r) / d + 2) / 6;
+  } else {
+    h = ((r - g) / d + 4) / 6;
+  }
+
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100),
+  };
+}
+
 type CanvasControlsProps = {
   brushColor: string;
   onColorChange: (color: string) => void;
@@ -29,6 +60,14 @@ export function CanvasControls(props: CanvasControlsProps) {
 
   const updateColorFromHSL = () => {
     const color = `hsl(${hue()}, ${saturation()}%, ${lightness()}%)`;
+    props.onColorChange(color);
+  };
+
+  const selectPreset = (color: string) => {
+    const hsl = hexToHsl(color);
+    setHue(hsl.h);
+    setSaturation(hsl.s);
+    setLightness(hsl.l);
     props.onColorChange(color);
   };
 
@@ -55,7 +94,7 @@ export function CanvasControls(props: CanvasControlsProps) {
                 class="canvas-controls-preset"
                 classList={{ active: props.brushColor === color }}
                 style={{ background: color }}
-                onClick={() => props.onColorChange(color)}
+                onClick={() => selectPreset(color)}
               />
             )}
           </For>
