@@ -1,5 +1,6 @@
-import { createSignal, createEffect, For, Show } from "solid-js";
+import { createSignal, createEffect, For } from "solid-js";
 import { labHelpCommands } from "../../Robot/commands/labCommands";
+import { DraggableTerminal } from "./DraggableTerminal";
 import "./LabTerminal.css";
 
 type HelpTerminalProps = {
@@ -28,47 +29,32 @@ export function HelpTerminal(props: HelpTerminalProps) {
   };
 
   return (
-    <>
-      <Show when={!isMinimized()}>
-        <div class="lab-terminal help-terminal">
-          {/* Header */}
-          <div class="lab-terminal-header">
-            <span class="lab-terminal-title">HELP</span>
-            <button
-              class="lab-terminal-minimize"
-              onClick={handleMinimize}
-              title="Minimize"
-            >
-              <span class="lab-terminal-minimize-icon" />
-            </button>
-          </div>
-
-          {/* Help content */}
-          <div class="lab-terminal-output">
-            <div class="lab-terminal-line lab-terminal-line-system">
-              <span class="lab-terminal-text">Available Commands:</span>
-            </div>
-            <For each={labHelpCommands}>
-              {(item) => (
-                <div class="help-command-item">
-                  <span class="help-command-name">{item.command}</span>
-                  <span class="help-command-desc">{item.description}</span>
-                </div>
-              )}
-            </For>
-          </div>
+    <DraggableTerminal
+      title="HELP"
+      initialPosition={{ x: window.innerWidth - 430, y: 30 }}
+      initialSize={{ width: 400, height: 350 }}
+      minSize={{ width: 250, height: 150 }}
+      isMinimized={() => isMinimized()}
+      onMinimize={handleMinimize}
+      onExpand={handleExpand}
+      fabIcon="?"
+      fabClass="help-terminal-fab"
+      terminalClass="help-terminal"
+    >
+      {/* Help content */}
+      <div class="lab-terminal-output">
+        <div class="lab-terminal-line lab-terminal-line-system">
+          <span class="lab-terminal-text">Available Commands:</span>
         </div>
-      </Show>
-
-      <Show when={isMinimized()}>
-        <button
-          class="lab-terminal-fab help-terminal-fab"
-          onClick={handleExpand}
-          title="Open Help"
-        >
-          <span class="lab-terminal-fab-icon">?</span>
-        </button>
-      </Show>
-    </>
+        <For each={labHelpCommands}>
+          {(item) => (
+            <div class="help-command-item">
+              <span class="help-command-name">{item.command}</span>
+              <span class="help-command-desc">{item.description}</span>
+            </div>
+          )}
+        </For>
+      </div>
+    </DraggableTerminal>
   );
 }

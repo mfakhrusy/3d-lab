@@ -9,11 +9,7 @@
 /* ========== Canvas Controls Terminal ========== */
 
 .canvas-controls {
-  position: fixed;
-  bottom: 30px;
-  left: 185px;
-  transform: translateX(calc(-50% - 300px));
-  width: 200px;
+  /* Position handled dynamically by DraggableTerminal */
 }
 
 .canvas-controls-body {

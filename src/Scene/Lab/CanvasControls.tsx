@@ -1,4 +1,5 @@
 import { createSignal, For } from "solid-js";
+import { DraggableTerminal } from "./DraggableTerminal";
 import "./LabTerminal.css";
 
 const PRESET_COLORS = [
@@ -72,12 +73,14 @@ export function CanvasControls(props: CanvasControlsProps) {
   };
 
   return (
-    <div class="lab-terminal canvas-controls">
-      {/* Header */}
-      <div class="lab-terminal-header">
-        <span class="lab-terminal-title">BRUSH</span>
-      </div>
-
+    <DraggableTerminal
+      title="BRUSH"
+      initialPosition={{ x: 30, y: 30 }}
+      initialSize={{ width: 220, height: 320 }}
+      minSize={{ width: 180, height: 200 }}
+      terminalClass="canvas-controls"
+      showMinimizeButton={false}
+    >
       {/* Controls */}
       <div class="canvas-controls-body">
         {/* Current color */}
@@ -148,6 +151,6 @@ export function CanvasControls(props: CanvasControlsProps) {
           </label>
         </div>
       </div>
-    </div>
+    </DraggableTerminal>
   );
 }
