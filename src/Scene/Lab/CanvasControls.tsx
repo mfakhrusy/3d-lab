@@ -1,6 +1,6 @@
 import { createSignal, For } from "solid-js";
 import { DraggableTerminal } from "./DraggableTerminal";
-import "./LabTerminal.css";
+import "./CanvasControls.css";
 
 const PRESET_COLORS = [
   "#000000",

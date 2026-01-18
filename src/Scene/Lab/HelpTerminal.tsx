@@ -2,6 +2,7 @@ import { createSignal, createEffect, For } from "solid-js";
 import { labHelpCommands } from "../../Robot/commands/labCommands";
 import { DraggableTerminal } from "./DraggableTerminal";
 import "./LabTerminal.css";
+import "./HelpTerminal.css";
 
 type HelpTerminalProps = {
   expanded?: boolean;

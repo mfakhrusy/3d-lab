@@ -6,7 +6,7 @@ import {
   type JSX,
   type Accessor,
 } from "solid-js";
-import "./LabTerminal.css";
+import "./DraggableTerminal.css";
 
 type Position = { x: number; y: number };
 type Size = { width: number; height: number };
@@ -172,10 +172,10 @@ export function DraggableTerminal(props: DraggableTerminalProps) {
     <>
       <Show when={!isMinimized() && initialized()}>
         <div
-          class={`lab-terminal ${props.terminalClass ?? ""}`}
+          class={`draggable-terminal ${props.terminalClass ?? ""}`}
           classList={{
-            "lab-terminal-dragging": isDragging(),
-            "lab-terminal-resizing": isResizing(),
+            "draggable-terminal-dragging": isDragging(),
+            "draggable-terminal-resizing": isResizing(),
           }}
           style={{
             left: `${position().x}px`,
@@ -187,49 +187,49 @@ export function DraggableTerminal(props: DraggableTerminalProps) {
           {/* Resize handles */}
           <Show when={resizable}>
             <div
-              class="lab-terminal-resize lab-terminal-resize-n"
+              class="draggable-terminal-resize draggable-terminal-resize-n"
               onMouseDown={handleResizeStart("n")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-s"
+              class="draggable-terminal-resize draggable-terminal-resize-s"
               onMouseDown={handleResizeStart("s")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-e"
+              class="draggable-terminal-resize draggable-terminal-resize-e"
               onMouseDown={handleResizeStart("e")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-w"
+              class="draggable-terminal-resize draggable-terminal-resize-w"
               onMouseDown={handleResizeStart("w")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-ne"
+              class="draggable-terminal-resize draggable-terminal-resize-ne"
               onMouseDown={handleResizeStart("ne")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-nw"
+              class="draggable-terminal-resize draggable-terminal-resize-nw"
               onMouseDown={handleResizeStart("nw")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-se"
+              class="draggable-terminal-resize draggable-terminal-resize-se"
               onMouseDown={handleResizeStart("se")}
             />
             <div
-              class="lab-terminal-resize lab-terminal-resize-sw"
+              class="draggable-terminal-resize draggable-terminal-resize-sw"
               onMouseDown={handleResizeStart("sw")}
             />
           </Show>
 
           {/* Header - draggable */}
-          <div class="lab-terminal-header" onMouseDown={handleDragStart}>
-            <span class="lab-terminal-title">{props.title}</span>
+          <div class="draggable-terminal-header" onMouseDown={handleDragStart}>
+            <span class="draggable-terminal-title">{props.title}</span>
             <Show when={showMinimize && props.onMinimize}>
               <button
-                class="lab-terminal-minimize"
+                class="draggable-terminal-minimize"
                 onClick={() => props.onMinimize?.()}
                 title="Minimize"
               >
-                <span class="lab-terminal-minimize-icon" />
+                <span class="draggable-terminal-minimize-icon" />
               </button>
             </Show>
           </div>
@@ -240,11 +240,13 @@ export function DraggableTerminal(props: DraggableTerminalProps) {
 
       <Show when={isMinimized() && props.onExpand}>
         <button
-          class={`lab-terminal-fab ${props.fabClass ?? ""}`}
+          class={`draggable-terminal-fab ${props.fabClass ?? ""}`}
           onClick={() => props.onExpand?.()}
           title={`Open ${props.title}`}
         >
-          <span class="lab-terminal-fab-icon">{props.fabIcon ?? ">_"}</span>
+          <span class="draggable-terminal-fab-icon">
+            {props.fabIcon ?? ">_"}
+          </span>
         </button>
       </Show>
     </>
