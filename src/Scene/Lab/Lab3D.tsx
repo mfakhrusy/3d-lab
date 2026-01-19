@@ -9,7 +9,8 @@ import { LabCanvas } from "./LabCanvas";
 import { CanvasControls } from "./CanvasControls";
 import { LabClock } from "./LabClock";
 import { TerminalInteractionProvider } from "./TerminalInteractionContext";
-import { WaveShader } from "./WaveShader";
+import { WaveShader, defaultShaderConfig } from "./WaveShader";
+import type { ShaderConfig } from "./WaveShader";
 import { ShaderControls } from "./ShaderControls";
 
 type Lab3DProps = {
@@ -68,9 +69,8 @@ export function Lab3D(props: Lab3DProps) {
   const [shaderMode, setShaderMode] = createSignal<"none" | "back" | "all">(
     "none",
   );
-  const [shaderColor, setShaderColor] = createSignal<[number, number, number]>([
-    0.22, 0.74, 0.97,
-  ]);
+  const [shaderConfig, setShaderConfig] =
+    createSignal<ShaderConfig>(defaultShaderConfig);
 
   let backWallRef: HTMLDivElement | undefined;
 
@@ -138,7 +138,7 @@ export function Lab3D(props: Lab3DProps) {
                 />
               </Show>
               <Show when={shaderMode() !== "none"}>
-                <WaveShader color={shaderColor()} />
+                <WaveShader config={shaderConfig()} />
               </Show>
             </div>
 
@@ -148,7 +148,7 @@ export function Lab3D(props: Lab3DProps) {
             {/* Left wall */}
             <div class="lab-wall lab-wall-left">
               <Show when={shaderMode() === "all"}>
-                <WaveShader color={shaderColor()} />
+                <WaveShader config={shaderConfig()} />
               </Show>
             </div>
 
@@ -158,21 +158,21 @@ export function Lab3D(props: Lab3DProps) {
                 <LabClock />
               </div>
               <Show when={shaderMode() === "all"}>
-                <WaveShader color={shaderColor()} />
+                <WaveShader config={shaderConfig()} />
               </Show>
             </div>
 
             {/* Floor */}
             <div class="lab-wall lab-wall-floor">
               <Show when={shaderMode() === "all"}>
-                <WaveShader color={shaderColor()} />
+                <WaveShader config={shaderConfig()} />
               </Show>
             </div>
 
             {/* Ceiling */}
             <div class="lab-wall lab-wall-ceiling">
               <Show when={shaderMode() === "all"}>
-                <WaveShader color={shaderColor()} />
+                <WaveShader config={shaderConfig()} />
               </Show>
             </div>
 
@@ -192,7 +192,10 @@ export function Lab3D(props: Lab3DProps) {
               />
             </Show>
             <Show when={shaderMode() !== "none"}>
-              <ShaderControls onColorChange={setShaderColor} />
+              <ShaderControls
+                initialConfig={shaderConfig()}
+                onConfigChange={setShaderConfig}
+              />
             </Show>
           </Show>
         </div>

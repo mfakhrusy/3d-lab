@@ -13,28 +13,55 @@ const fragmentShaderSource = `
   uniform float u_time;
   uniform vec2 u_resolution;
   uniform vec3 u_color;
+  uniform float u_intensity;
+  uniform float u_speed;
+  uniform float u_waveCount;
+  uniform float u_frequency;
 
   void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
     
-    // Create wave effect
-    float wave1 = sin(uv.x * 10.0 + u_time * 2.0) * 0.1;
-    float wave2 = sin(uv.x * 15.0 - u_time * 1.5 + 1.0) * 0.05;
-    float wave3 = sin(uv.x * 8.0 + u_time * 0.8 + 2.0) * 0.08;
+    float combinedWave = 0.0;
+    float baseAmplitude = 0.1 * u_intensity;
     
-    float combinedWave = wave1 + wave2 + wave3;
+    // Wave 1 - always on
+    if (u_waveCount >= 1.0) {
+      combinedWave += sin(uv.x * 10.0 * u_frequency + u_time * 2.0 * u_speed) * baseAmplitude;
+    }
+    
+    // Wave 2
+    if (u_waveCount >= 2.0) {
+      combinedWave += sin(uv.x * 15.0 * u_frequency - u_time * 1.5 * u_speed + 1.0) * baseAmplitude * 0.5;
+    }
+    
+    // Wave 3
+    if (u_waveCount >= 3.0) {
+      combinedWave += sin(uv.x * 8.0 * u_frequency + u_time * 0.8 * u_speed + 2.0) * baseAmplitude * 0.8;
+    }
+    
+    // Wave 4
+    if (u_waveCount >= 4.0) {
+      combinedWave += sin(uv.x * 20.0 * u_frequency + u_time * 2.5 * u_speed + 3.0) * baseAmplitude * 0.3;
+    }
+    
+    // Wave 5
+    if (u_waveCount >= 5.0) {
+      combinedWave += sin(uv.x * 6.0 * u_frequency - u_time * 1.2 * u_speed + 4.0) * baseAmplitude * 0.6;
+    }
+    
     float distFromWave = abs(uv.y - 0.5 - combinedWave);
     
     // Glow effect around the wave
-    float glow = 0.02 / distFromWave;
+    float glowSize = 0.02 * u_intensity;
+    float glow = glowSize / distFromWave;
     glow = clamp(glow, 0.0, 1.0);
     
     // Additional horizontal waves for ambient effect
-    float ambient = sin(uv.y * 20.0 + u_time) * 0.02;
-    ambient += sin(uv.x * 25.0 + uv.y * 10.0 - u_time * 0.5) * 0.015;
+    float ambient = sin(uv.y * 20.0 + u_time * u_speed) * 0.02 * u_intensity;
+    ambient += sin(uv.x * 25.0 + uv.y * 10.0 - u_time * 0.5 * u_speed) * 0.015 * u_intensity;
     
     // Combine colors
-    vec3 baseColor = u_color * 0.01;
+    vec3 baseColor = u_color * 0.01 * u_intensity;
     vec3 waveColor = u_color * glow;
     vec3 ambientColor = u_color * ambient;
     
@@ -83,8 +110,24 @@ function createProgram(
   return program;
 }
 
+export type ShaderConfig = {
+  color: [number, number, number];
+  intensity: number;
+  speed: number;
+  waveCount: number;
+  frequency: number;
+};
+
 type WaveShaderProps = {
-  color?: [number, number, number];
+  config: ShaderConfig;
+};
+
+export const defaultShaderConfig: ShaderConfig = {
+  color: [0.22, 0.74, 0.97],
+  intensity: 1.0,
+  speed: 1.0,
+  waveCount: 3,
+  frequency: 1.0,
 };
 
 export function WaveShader(props: WaveShaderProps) {
@@ -92,7 +135,7 @@ export function WaveShader(props: WaveShaderProps) {
   let animationId: number;
   let gl: WebGLRenderingContext | null = null;
 
-  const color = () => props.color ?? [1, 0.74, 0.97];
+  const config = () => props.config;
 
   onMount(() => {
     if (!canvasRef) return;
@@ -132,6 +175,10 @@ export function WaveShader(props: WaveShaderProps) {
     const timeLocation = gl.getUniformLocation(program, "u_time");
     const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
     const colorLocation = gl.getUniformLocation(program, "u_color");
+    const intensityLocation = gl.getUniformLocation(program, "u_intensity");
+    const speedLocation = gl.getUniformLocation(program, "u_speed");
+    const waveCountLocation = gl.getUniformLocation(program, "u_waveCount");
+    const frequencyLocation = gl.getUniformLocation(program, "u_frequency");
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -158,7 +205,11 @@ export function WaveShader(props: WaveShaderProps) {
 
       gl.uniform1f(timeLocation, time);
       gl.uniform2f(resolutionLocation, canvasRef.width, canvasRef.height);
-      gl.uniform3fv(colorLocation, color());
+      gl.uniform3fv(colorLocation, config().color);
+      gl.uniform1f(intensityLocation, config().intensity);
+      gl.uniform1f(speedLocation, config().speed);
+      gl.uniform1f(waveCountLocation, config().waveCount);
+      gl.uniform1f(frequencyLocation, config().frequency);
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
 
