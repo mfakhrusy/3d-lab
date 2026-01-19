@@ -9,6 +9,7 @@ import { LabCanvas } from "./LabCanvas";
 import { CanvasControls } from "./CanvasControls";
 import { LabClock } from "./LabClock";
 import { TerminalInteractionProvider } from "./TerminalInteractionContext";
+import { WaveShader } from "./WaveShader";
 
 type Lab3DProps = {
   onBack?: () => void;
@@ -63,6 +64,7 @@ export function Lab3D(props: Lab3DProps) {
   const [helpExpanded, setHelpExpanded] = createSignal(false);
   const [canvasVisible, setCanvasVisible] = createSignal(false);
   const [brushColor, setBrushColor] = createSignal("#000000");
+  const [shaderVisible, setShaderVisible] = createSignal(false);
 
   let backWallRef: HTMLDivElement | undefined;
 
@@ -82,6 +84,9 @@ export function Lab3D(props: Lab3DProps) {
     },
     hideCanvas: () => setCanvasVisible(false),
     isCanvasVisible: () => canvasVisible(),
+    showShader: () => setShaderVisible(true),
+    hideShader: () => setShaderVisible(false),
+    isShaderVisible: () => shaderVisible(),
   };
 
   const palette = () => colorPalettes[paintColor()];
@@ -125,6 +130,9 @@ export function Lab3D(props: Lab3DProps) {
                   brushColor={brushColor()}
                 />
               </Show>
+              <Show when={shaderVisible()}>
+                <WaveShader />
+              </Show>
             </div>
 
             {/* Front wall - where we entered (transparent) */}
@@ -146,7 +154,7 @@ export function Lab3D(props: Lab3DProps) {
             {/* Ceiling */}
             <div class="lab-wall lab-wall-ceiling" />
 
-            <RobotLab hidden={canvasVisible()} />
+            <RobotLab hidden={canvasVisible() || shaderVisible()} />
           </div>
           <Show when={!isEntering()}>
             <LabTerminal labActions={labActions} handleBack={props.onBack} />

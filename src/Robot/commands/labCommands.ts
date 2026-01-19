@@ -148,6 +148,35 @@ export function parseLabCommand(
     return { handled: true, response: "Canvas hidden. I'm back!" };
   }
 
+  // Shader commands
+  if (
+    lower.includes("show wave shader") ||
+    lower.includes("wave shader on back wall")
+  ) {
+    if (actions.isShaderVisible()) {
+      return { handled: true, response: "The wave shader is already running!" };
+    }
+    return {
+      handled: true,
+      response: "Oops, let me hide first...",
+      followUp: async () => {
+        actions.showShader();
+        return "I'm hidden now. Wave shader activated on the back wall... watch the waves flow!";
+      },
+    };
+  }
+
+  if (
+    lower.includes("hide wave shader") ||
+    lower.includes("stop wave shader")
+  ) {
+    if (!actions.isShaderVisible()) {
+      return { handled: true, response: "No shader is running." };
+    }
+    actions.hideShader();
+    return { handled: true, response: "Wave shader disabled. I'm back!" };
+  }
+
   return { handled: false, response: "" };
 }
 
@@ -163,6 +192,8 @@ export const labHelpCommands = [
     description: "Open a drawing canvas on the back wall",
   },
   { command: "hide canvas", description: "Hide the drawing canvas" },
+  { command: "show wave shader", description: "Show wave shader on back wall" },
+  { command: "hide wave shader", description: "Hide the wave shader" },
   { command: "go to office", description: "Return to the office scene" },
   { command: "help", description: "Show this help panel" },
 ];
