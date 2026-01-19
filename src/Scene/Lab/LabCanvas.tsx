@@ -16,6 +16,21 @@ export function LabCanvas(props: LabCanvasProps) {
   let lastY = 0;
   const [isHovering, setIsHovering] = createSignal(false);
 
+  /**
+   *
+   * This function checks e.target.closest(".draggable-terminal") to detect if the mouse is actually over a terminal element:
+   * 1. Clicking on a terminal won't start drawing (even if terminal is over canvas)
+   * 2. Hovering over a terminal won't show the brush cursor
+   * 3. Drawing continues only when the mouse isn't over a terminal
+   * This works regardless of the translateZ mapping since we're checking the actual DOM element the mouse is over via the event target.
+   *
+   * @returns true if the mouse is over a terminal element, false otherwise
+   */
+  const isMouseOnTopOfTerminal = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    return !!target.closest(".draggable-terminal");
+  };
+
   const isOverCanvas = (e: MouseEvent) => {
     if (!props.backWallRef) return false;
     const wallRect = props.backWallRef.getBoundingClientRect();
@@ -55,7 +70,7 @@ export function LabCanvas(props: LabCanvasProps) {
   };
 
   const handleMouseDown = (e: MouseEvent) => {
-    if (isInteracting()) return;
+    if (isInteracting() || isMouseOnTopOfTerminal(e)) return;
     const coords = getCanvasCoords(e);
     if (coords) {
       isDrawing = true;
@@ -65,9 +80,10 @@ export function LabCanvas(props: LabCanvasProps) {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    setIsHovering(isOverCanvas(e) && !isInteracting());
+    const blockedByTerminal = isMouseOnTopOfTerminal(e);
+    setIsHovering(isOverCanvas(e) && !isInteracting() && !blockedByTerminal);
 
-    if (isInteracting() || !isDrawing || !ctx) return;
+    if (isInteracting() || blockedByTerminal || !isDrawing || !ctx) return;
 
     const coords = getCanvasCoords(e);
     if (coords) {
