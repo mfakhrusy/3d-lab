@@ -12,61 +12,10 @@
   bottom: 21%;
   background: linear-gradient(
     180deg,
-    #4a90d9 0%,
-    #87ceeb 40%,
-    #b8e0f7 70%,
-    #d4eef9 100%
+    var(--sky-top, #4a90d9) 0%,
+    var(--sky-bottom, #d4eef9) 100%
   );
   z-index: 1;
-}
-
-/* Sun */
-.horizon-sky::before {
-  content: "";
-  position: absolute;
-  top: 15%;
-  right: 20%;
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(
-    circle,
-    #fff9c4 0%,
-    #ffeb3b 30%,
-    #ffc107 60%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  box-shadow:
-    0 0 60px 30px rgba(255, 235, 59, 0.4),
-    0 0 100px 60px rgba(255, 193, 7, 0.2);
-}
-
-/* Subtle clouds */
-.horizon-sky::after {
-  content: "";
-  position: absolute;
-  top: 25%;
-  left: 10%;
-  width: 150px;
-  height: 50px;
-  background: radial-gradient(
-    ellipse 60% 40% at 50% 50%,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 100%
-  );
-  animation: cloud-drift 30s ease-in-out infinite;
-}
-
-@keyframes cloud-drift {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  50% {
-    transform: translateX(100px);
-  }
 }
 
 /* ========== Ground ========== */
@@ -94,4 +43,19 @@
     rgba(0, 0, 0, 0.03) 40px
   );
   pointer-events: none;
+}
+
+/* Debug Slider */
+.debug-slider {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }

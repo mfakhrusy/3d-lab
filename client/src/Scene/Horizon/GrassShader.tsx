@@ -43,6 +43,7 @@ const vertexShader = `
 const fragmentShader = `
   varying vec2 vUv;
   varying vec3 vColor;
+  uniform float lightIntensity;
 
   void main() {
     // Base grass colors
@@ -55,13 +56,16 @@ const fragmentShader = `
     // Add subtle variation
     color += (vColor.x - 0.5) * 0.1;
 
+    // Apply light intensity
+    color *= lightIntensity;
+
     gl_FragColor = vec4(color, 1.0);
   }
 `;
 
 // Parameters
 const PLANE_SIZE = 100;
-const BLADE_COUNT = 200000;
+const BLADE_COUNT = 400000;
 const BLADE_WIDTH = 0.1;
 const BLADE_HEIGHT = 0.8;
 const BLADE_HEIGHT_VARIATION = 0.6;
@@ -159,10 +163,24 @@ function generateBlade(
   return { verts, indices };
 }
 
-function generateField(scene: THREE.Scene, timeUniform: { value: number }) {
+function generateField(
+  scene: THREE.Scene,
+  timeUniform: { value: number },
+  lightUniform: { value: number },
+) {
   const positions: number[] = [];
   const uvs: number[] = [];
   const indices: number[] = [];
+  // ... (rest of function unchanged until material) ...
+
+  // I need to be careful not to replace lines I don't see.
+  // The previous tool calls modified this file significantly.
+  // Let me target the function signature and the material creation separately or I will mess up.
+  // Actually I should split this into two replacements if possible, or just update the signature and the creation.
+
+  // Better strategy: update signature first.
+
+  // Arrays are already declared above
   const colors: number[] = [];
 
   const surfaceMin = (PLANE_SIZE / 2) * -1;
@@ -208,6 +226,7 @@ function generateField(scene: THREE.Scene, timeUniform: { value: number }) {
   const grassMaterial = new THREE.ShaderMaterial({
     uniforms: {
       iTime: timeUniform,
+      lightIntensity: lightUniform,
     },
     vertexShader,
     fragmentShader,
@@ -219,7 +238,7 @@ function generateField(scene: THREE.Scene, timeUniform: { value: number }) {
   scene.add(mesh);
 }
 
-export function GrassShader() {
+export function GrassShader(props: { lightIntensity?: number }) {
   let containerRef: HTMLDivElement | undefined;
   let animationId: number;
   let renderer: THREE.WebGLRenderer | null = null;
@@ -251,13 +270,17 @@ export function GrassShader() {
     // Time uniform for animation
     const startTime = Date.now();
     const timeUniform = { value: 0 };
+    const lightUniform = { value: props.lightIntensity ?? 1 };
 
     // Generate grass field
-    generateField(scene, timeUniform);
+    generateField(scene, timeUniform, lightUniform);
 
     // Animation loop
     const animate = () => {
       timeUniform.value = Date.now() - startTime;
+      // Update light intensity from props
+      lightUniform.value = props.lightIntensity ?? 1;
+
       renderer?.render(scene, camera);
       animationId = requestAnimationFrame(animate);
     };
