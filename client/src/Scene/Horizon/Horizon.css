@@ -5,6 +5,23 @@
   overflow: hidden;
 }
 
+/* ========== Milky Way Night Sky ========== */
+.milky-way-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: var(--milky-way-opacity, 0);
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.milky-way-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
 /* ========== Sky ========== */
 .horizon-sky {
   position: absolute;
@@ -16,6 +33,8 @@
     var(--sky-bottom, #d4eef9) 100%
   );
   z-index: 1;
+  opacity: calc(1 - var(--milky-way-opacity, 0) * 0.7);
+  transition: opacity 0.5s ease;
 }
 
 /* ========== Ground ========== */
@@ -27,16 +46,19 @@
   height: 30%;
   background: linear-gradient(
     180deg,
-    var(--ground-1, #4a7c3f) 0%,
-    var(--ground-2, #3d6b34) 30%,
+    transparent 0%,
+    transparent 30%,
+    var(--ground-1, #4a7c3f) 30%,
+    var(--ground-2, #3d6b34) 60%,
     var(--ground-3, #2d5a28) 100%
   );
   /* background: #4a90d9; */
   overflow: hidden;
+  z-index: 2;
 }
 
 /* Ground texture overlay */
-.horizon-ground::before {
+/* .horizon-ground::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -48,7 +70,7 @@
     rgba(0, 0, 0, 0.03) 40px
   );
   pointer-events: none;
-}
+} */
 
 /* Time Control Slider */
 .time-control {

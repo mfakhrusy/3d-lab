@@ -12,6 +12,7 @@ type DayNightState = {
   timeOfDay: number; // 0-24
   isDay: boolean; // 6am - 6pm
   lightIntensity: number; // 0-1 (for grass shader)
+  milkyWayOpacity: number; // 0-1 (for night sky)
   skyStyle: Record<string, string>; // CSS variables for sky gradient & sun
 };
 
@@ -161,6 +162,8 @@ export function DayNightProvider(props: ParentProps) {
       lightIntensity = 0.2;
     }
 
+    const milkyWayOpacity = Math.max(0, 1 - lightIntensity * 1.5);
+
     const skyStyle = {
       "--sky-top": topColor as string,
       "--sky-bottom": bottomColor as string,
@@ -168,12 +171,14 @@ export function DayNightProvider(props: ParentProps) {
       "--ground-2": ground2 as string,
       "--ground-3": ground3 as string,
       "--scene-opacity": `${lightIntensity}`,
+      "--milky-way-opacity": `${milkyWayOpacity}`,
     };
 
     return {
       timeOfDay: t,
       isDay,
       lightIntensity,
+      milkyWayOpacity,
       skyStyle,
     };
   });

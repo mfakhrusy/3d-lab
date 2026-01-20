@@ -3,6 +3,8 @@ import "./Horizon.css";
 import { HorizonDoor } from "./HorizonDoor";
 import { GrassShader } from "./GrassShader";
 import { DayNightProvider, useDayNight } from "./DayNightContext";
+import milkyWayAvif from "../../assets/milky-way-bg.avif";
+import milkyWayJpg from "../../assets/milky-way-bg.jpg";
 
 type HorizonProps = {
   onEnterDoor: () => void;
@@ -19,6 +21,12 @@ function HorizonScene(props: HorizonProps) {
 
   return (
     <div class="horizon-scene" style={state().skyStyle}>
+      {/* Milky Way night sky */}
+      <picture class="milky-way-bg">
+        <source srcset={milkyWayAvif} type="image/avif" />
+        <img src={milkyWayJpg} alt="" aria-hidden="true" />
+      </picture>
+
       {/* Sky background */}
       <div class="horizon-sky" />
 
