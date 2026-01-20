@@ -48,7 +48,7 @@ const fragmentShader = `
   void main() {
     // Base grass colors
     vec3 baseColor = vec3(0.2, 0.5, 0.15);
-    vec3 tipColor = vec3(0.4, 0.7, 0.25);
+    vec3 tipColor = vec3(0.45, 0.6, 0.15);
 
     // Mix colors based on height (vColor.x indicates height)
     vec3 color = mix(baseColor, tipColor, vColor.x);
