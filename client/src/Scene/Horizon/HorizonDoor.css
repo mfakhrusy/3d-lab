@@ -1,9 +1,10 @@
 /* Reposition door for Horizon scene */
+/* z-index: between sky (1) and ground (2) so grass appears in front */
 .horizon-door-wrapper {
   position: absolute;
   right: 15%;
-  bottom: 21%;
-  z-index: 10;
+  bottom: 20%;
+  z-index: 1;
 }
 
 /* Override door-container positioning for this context */
@@ -11,6 +12,11 @@
   position: relative;
   right: auto;
   bottom: auto;
+}
+
+/* override box-shadow for horizon door */
+.horizon-door-wrapper .door-frame {
+  box-shadow: none;
 }
 
 /* Hide cartoon signs for the delicate horizon scene */
