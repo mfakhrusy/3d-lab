@@ -12,6 +12,8 @@ import { TerminalZIndexProvider } from "./TerminalZIndexContext";
 import { WaveShader } from "./WaveShader";
 import { LabTerminals } from "./LabTerminals";
 import { LabHorizonPortal } from "./LabHorizonPortal";
+import { MobileLabTerminal } from "./MobileLabTerminal";
+import { useMobile } from "./useMobile";
 
 type Lab3DProps = {
   onBack?: () => void;
@@ -93,6 +95,7 @@ function Lab3DContent(props: Lab3DProps) {
     shaderMode,
     setShaderMode,
   } = useLab();
+  const isMobile = useMobile();
 
   const [isEntering, setIsEntering] = createSignal(true);
   const [paintColor, setPaintColor] = createSignal<LabPaintColor>("blue");
@@ -193,93 +196,100 @@ function Lab3DContent(props: Lab3DProps) {
   const isCinematic = () => touchGrassPhase() !== "idle" || debugPortal;
 
   return (
-    <div
-      class="lab-container"
-      style={{
-        "--lab-primary": palette().primary,
-        "--lab-secondary": palette().secondary,
-        "--lab-dark": palette().dark,
-        "--lab-accent": palette().accent,
-      }}
-    >
+    <>
       <div
-        class="lab-room-shell"
-        classList={{ "lab-room-entering": isEntering() }}
+        class="lab-container"
+        style={{
+          "--lab-primary": palette().primary,
+          "--lab-secondary": palette().secondary,
+          "--lab-dark": palette().dark,
+          "--lab-accent": palette().accent,
+        }}
       >
         <div
-          class="lab-room"
-          classList={{
-            "lab-cinematic": isCinematic(),
-          }}
-          style={{
-            "--cam-z": `${camZ()}px`,
-            "--cam-rot-y": `${camRotY()}deg`,
-          }}
+          class="lab-room-shell"
+          classList={{ "lab-room-entering": isEntering() }}
         >
-          {/* Back wall - facing us */}
-          <div ref={backWallRef} class="lab-wall lab-wall-back">
-            <Show when={webpageVisible()}>
-              <iframe
-                class="lab-back-iframe"
-                src="https://www.youtube.com/embed/R0NME9W3cR4?autoplay=1&loop=1&playlist=R0NME9W3cR4&start=60&controls=0&modestbranding=1&showinfo=0&rel=0"
-                title="Rain sounds"
-                allow="autoplay; fullscreen"
-              />
-            </Show>
-            <Show when={canvasVisible()}>
-              <LabCanvas backWallRef={backWallRef} />
-            </Show>
-            <Show when={shaderMode() !== "none"}>
-              <WaveShader />
-            </Show>
-          </div>
-
-          {/* Front wall - where we entered (transparent) */}
-          <div class="lab-wall lab-wall-front" />
-
-          {/* Left wall with horizon portal */}
-          <div class="lab-wall lab-wall-left">
-            <LabHorizonPortal visible={portalVisible()} />
-            <Show when={shaderMode() === "all"}>
-              <WaveShader />
-            </Show>
-          </div>
-
-          {/* Right wall */}
-          <div class="lab-wall lab-wall-right">
-            <div class="lab-clock-wrapper">
-              <LabClock />
+          <div
+            class="lab-room"
+            classList={{
+              "lab-cinematic": isCinematic(),
+            }}
+            style={{
+              "--cam-z": `${camZ()}px`,
+              "--cam-rot-y": `${camRotY()}deg`,
+            }}
+          >
+            {/* Back wall - facing us */}
+            <div ref={backWallRef} class="lab-wall lab-wall-back">
+              <Show when={webpageVisible()}>
+                <iframe
+                  class="lab-back-iframe"
+                  src="https://www.youtube.com/embed/R0NME9W3cR4?autoplay=1&loop=1&playlist=R0NME9W3cR4&start=60&controls=0&modestbranding=1&showinfo=0&rel=0"
+                  title="Rain sounds"
+                  allow="autoplay; fullscreen"
+                />
+              </Show>
+              <Show when={canvasVisible()}>
+                <LabCanvas backWallRef={backWallRef} />
+              </Show>
+              <Show when={shaderMode() !== "none"}>
+                <WaveShader />
+              </Show>
             </div>
-            <Show when={shaderMode() === "all"}>
-              <WaveShader />
-            </Show>
-          </div>
 
-          {/* Floor */}
-          <div class="lab-wall lab-wall-floor">
-            <Show when={shaderMode() === "all"}>
-              <WaveShader />
-            </Show>
-          </div>
+            {/* Front wall - where we entered (transparent) */}
+            <div class="lab-wall lab-wall-front" />
 
-          {/* Ceiling */}
-          <div class="lab-wall lab-wall-ceiling">
-            <Show when={shaderMode() === "all"}>
-              <WaveShader />
-            </Show>
-          </div>
+            {/* Left wall with horizon portal */}
+            <div class="lab-wall lab-wall-left">
+              <LabHorizonPortal visible={portalVisible()} />
+              <Show when={shaderMode() === "all"}>
+                <WaveShader />
+              </Show>
+            </div>
 
-          <RobotLab hidden={canvasVisible() || shaderMode() !== "none"} />
+            {/* Right wall */}
+            <div class="lab-wall lab-wall-right">
+              <div class="lab-clock-wrapper">
+                <LabClock />
+              </div>
+              <Show when={shaderMode() === "all"}>
+                <WaveShader />
+              </Show>
+            </div>
+
+            {/* Floor */}
+            <div class="lab-wall lab-wall-floor">
+              <Show when={shaderMode() === "all"}>
+                <WaveShader />
+              </Show>
+            </div>
+
+            {/* Ceiling */}
+            <div class="lab-wall lab-wall-ceiling">
+              <Show when={shaderMode() === "all"}>
+                <WaveShader />
+              </Show>
+            </div>
+
+            <RobotLab hidden={canvasVisible() || shaderMode() !== "none"} />
+          </div>
         </div>
+
+        <Show when={portalOverlayOn()}>
+          <div class="portal-transition-overlay" />
+        </Show>
+
+        <Show when={!isEntering() && !isCinematic()}>
+          <LabTerminals labActions={labActions} onBack={props.onBack} />
+        </Show>
       </div>
 
-      <Show when={portalOverlayOn()}>
-        <div class="portal-transition-overlay" />
+      {/* Mobile terminal rendered outside lab-container to avoid perspective/transform issues */}
+      <Show when={isMobile() && !isEntering() && !isCinematic()}>
+        <MobileLabTerminal labActions={labActions} handleBack={props.onBack} />
       </Show>
-
-      <Show when={!isEntering() && !isCinematic()}>
-        <LabTerminals labActions={labActions} onBack={props.onBack} />
-      </Show>
-    </div>
+    </>
   );
 }

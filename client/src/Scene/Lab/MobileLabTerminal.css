@@ -1,0 +1,81 @@
+.mobile-lab-terminal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+
+  background: linear-gradient(
+    180deg,
+    var(--lab-terminal-bg-start) 0%,
+    var(--lab-terminal-bg-end) 100%
+  );
+  border-top: 1px solid var(--lab-accent-25);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 -4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  font-family: var(--lab-font-mono);
+}
+
+.mobile-lab-terminal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--lab-accent-06);
+  border-bottom: 1px solid var(--lab-accent-15);
+  flex-shrink: 0;
+}
+
+.mobile-lab-terminal-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--lab-accent-80);
+  text-transform: uppercase;
+}
+
+.mobile-lab-terminal-output {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lab-scrollbar-thumb) transparent;
+}
+
+.mobile-lab-terminal-output::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mobile-lab-terminal-output::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-lab-terminal-output::-webkit-scrollbar-thumb {
+  background: var(--lab-scrollbar-thumb);
+  border-radius: 3px;
+}
+
+.mobile-lab-terminal-input-container {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: var(--lab-terminal-input-bg);
+  border-top: 1px solid var(--lab-accent-10);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Help lines styling */
+.lab-terminal-line-help {
+  color: var(--lab-accent-70);
+  font-size: 12px;
+  padding-left: 16px;
+  margin-bottom: 4px;
+}

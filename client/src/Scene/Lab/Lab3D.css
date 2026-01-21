@@ -25,6 +25,31 @@
   transform-style: preserve-3d;
 }
 
+/* Mobile: constrain 3D room to top portion, terminal takes bottom 45% */
+@media (max-width: 767px) {
+  :root {
+    --room-height: 55vh;
+  }
+
+  .lab-container {
+    inset: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55vh;
+  }
+
+  .lab-room-shell {
+    height: 55vh;
+  }
+
+  .lab-wall-back,
+  .lab-wall-left,
+  .lab-wall-right {
+    height: 55vh;
+  }
+}
+
 .lab-room {
   position: absolute;
   inset: 0;
