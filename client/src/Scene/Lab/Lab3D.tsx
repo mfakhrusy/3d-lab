@@ -170,13 +170,26 @@ function Lab3DContent(props: Lab3DProps) {
 
   const palette = () => colorPalettes[paintColor()];
 
+  // Debug mode: add ?debug=portal#lab to URL to show portal immediately in the lab scene
+  const debugPortal =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("debug") === "portal";
+
   onMount(() => {
-    setTimeout(() => {
+    if (debugPortal) {
+      // Skip entry animation, show portal immediately facing left wall
       setIsEntering(false);
-    }, 2000);
+      setTouchGrassPhase("spawnPortal");
+      setCamRotY(-90);
+      setPortalVisible(true);
+    } else {
+      setTimeout(() => {
+        setIsEntering(false);
+      }, 2000);
+    }
   });
 
-  const isCinematic = () => touchGrassPhase() !== "idle";
+  const isCinematic = () => touchGrassPhase() !== "idle" || debugPortal;
 
   return (
     <div
@@ -223,12 +236,18 @@ function Lab3DContent(props: Lab3DProps) {
           {/* Front wall - where we entered (transparent) */}
           <div class="lab-wall lab-wall-front" />
 
-          {/* Left wall with portal */}
+          {/* Left wall with portal tunnel */}
           <div class="lab-wall lab-wall-left">
             <div
-              class="lab-portal"
-              classList={{ "lab-portal-visible": portalVisible() }}
-            />
+              class="lab-portal-tunnel"
+              classList={{ "lab-portal-tunnel-visible": portalVisible() }}
+            >
+              <div class="tunnel-wall tunnel-top" />
+              <div class="tunnel-wall tunnel-bottom" />
+              <div class="tunnel-wall tunnel-left" />
+              <div class="tunnel-wall tunnel-right" />
+              <div class="lab-portal" />
+            </div>
             <Show when={shaderMode() === "all"}>
               <WaveShader />
             </Show>

@@ -296,66 +296,233 @@
   }
 }
 
-/* ========== Grass Portal ========== */
+/* ========== Horizon Door Portal with 3D Tunnel ========== */
+
+/* Tunnel container - covers the entire left wall */
+.lab-portal-tunnel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 600ms ease;
+  pointer-events: none;
+}
+
+.lab-portal-tunnel-visible {
+  opacity: 1;
+}
+
+/* The door at the end of the tunnel */
 .lab-portal {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(380px, 60vw);
-  height: min(520px, 70vh);
-  transform: translate(-50%, -50%) scale(0.75);
-  opacity: 0;
-  border-radius: 18px;
-  background:
-    radial-gradient(
-      circle at 30% 30%,
-      rgba(120, 255, 160, 0.35),
-      transparent 55%
-    ),
-    linear-gradient(135deg, rgba(20, 90, 40, 0.9), rgba(30, 180, 90, 0.55));
+  width: 120px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, #050508 0%, #0a0a10 50%, #050508 100%);
+  border: 4px solid #5a5a6a;
+  border-bottom: none;
   box-shadow:
-    0 0 24px rgba(74, 222, 128, 0.25),
-    inset 0 0 40px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(74, 222, 128, 0.35);
-  filter: saturate(1.2);
-  transition:
-    opacity 600ms ease,
-    transform 600ms cubic-bezier(0.2, 0.9, 0.2, 1),
-    box-shadow 600ms ease;
-  pointer-events: none;
+    inset 0 0 30px rgba(0, 0, 0, 0.9),
+    0 0 20px rgba(0, 0, 0, 0.8);
+  z-index: 2;
 }
 
+/* Subtle glow from inside the dark tunnel */
 .lab-portal::before {
   content: "";
   position: absolute;
-  inset: 10px;
-  border-radius: 14px;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(120, 255, 160, 0.16) 0 8px,
-    rgba(0, 0, 0, 0) 8px 16px
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse,
+    rgba(74, 222, 128, 0.2) 0%,
+    transparent 70%
   );
-  opacity: 0.7;
-  filter: blur(0.2px);
-  animation: portalShimmer 1.2s linear infinite;
+  pointer-events: none;
 }
 
-@keyframes portalShimmer {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 120px 0;
-  }
+/* Tunnel walls - trapezoids connecting door to wall edges */
+.tunnel-wall {
+  position: absolute;
+  z-index: 1;
 }
 
-.lab-portal-visible {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  box-shadow:
-    0 0 60px rgba(74, 222, 128, 0.45),
-    0 0 140px rgba(74, 222, 128, 0.2),
-    inset 0 0 40px rgba(0, 0, 0, 0.35);
+/* Top tunnel wall - ceiling of tunnel */
+.tunnel-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(50% - 120px);
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    calc(50% + 64px) 100%,
+    calc(50% - 64px) 100%
+  );
+  background: linear-gradient(180deg, #0a0a12 0%, #050508 100%);
+  /* Edge highlight where ceiling meets door */
+  border-bottom: 1px solid rgba(100, 200, 255, 0.15);
+}
+
+/* Ceiling panel lines for depth */
+.tunnel-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* background: repeating-linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 18%,
+    rgba(60, 80, 100, 0.08) 18%,
+    rgba(60, 80, 100, 0.08) 20%
+  ); */
+  clip-path: inherit;
+}
+
+/* Bottom tunnel wall - floor of tunnel */
+.tunnel-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(50% - 120px);
+  clip-path: polygon(
+    calc(50% - 64px) 0%,
+    calc(50% + 64px) 0%,
+    100% 100%,
+    0% 100%
+  );
+  background: linear-gradient(0deg, #08080c 0%, #030305 100%);
+  /* Edge highlight where floor meets door */
+  border-top: 1px solid rgba(74, 222, 128, 0.1);
+}
+
+/* Floor perspective stripes */
+.tunnel-bottom::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* background: repeating-linear-gradient(
+    0deg,
+    transparent 0%,
+    transparent 15%,
+    rgba(74, 222, 128, 0.04) 15%,
+    rgba(74, 222, 128, 0.04) 17%
+  ); */
+  clip-path: inherit;
+}
+
+/* Green light reflection on floor from door */
+.tunnel-bottom::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 35%;
+  right: 35%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 0%,
+    rgba(74, 222, 128, 0.12) 0%,
+    transparent 70%
+  );
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+
+/* Left tunnel wall */
+.tunnel-left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: calc(50% - 64px);
+  clip-path: polygon(
+    0% 0%,
+    100% calc(50% - 120px),
+    100% calc(50% + 120px),
+    0% 100%
+  );
+  background: linear-gradient(90deg, #0c0c14 0%, #060608 100%);
+  /* Edge highlight */
+  border-right: 1px solid rgba(100, 200, 255, 0.1);
+}
+
+/* Left wall panel lines */
+.tunnel-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* background: repeating-linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 12%,
+    rgba(60, 80, 100, 0.06) 12%,
+    rgba(60, 80, 100, 0.06) 14%
+  ); */
+  clip-path: inherit;
+}
+
+/* Right tunnel wall */
+.tunnel-right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: calc(50% - 64px);
+  clip-path: polygon(
+    0% calc(50% - 120px),
+    100% 0%,
+    100% 100%,
+    0% calc(50% + 120px)
+  );
+  background: linear-gradient(270deg, #0c0c14 0%, #060608 100%);
+  /* Edge highlight */
+  border-left: 1px solid rgba(100, 200, 255, 0.1);
+}
+
+/* Right wall panel lines */
+.tunnel-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* background: repeating-linear-gradient(
+    270deg,
+    transparent 0%,
+    transparent 12%,
+    rgba(60, 80, 100, 0.06) 12%,
+    rgba(60, 80, 100, 0.06) 14%
+  ); */
+  clip-path: inherit;
+}
+
+/* Corner ambient occlusion - darker where walls meet */
+.lab-portal-tunnel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 30% 30% at 0% 0%,
+      rgba(0, 0, 0, 0.4) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 30% 30% at 100% 0%,
+      rgba(0, 0, 0, 0.4) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 30% 30% at 0% 100%,
+      rgba(0, 0, 0, 0.4) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 30% 30% at 100% 100%,
+      rgba(0, 0, 0, 0.4) 0%,
+      transparent 70%
+    );
+  pointer-events: none;
+  z-index: 3;
 }
 
 /* ========== Portal Transition Overlay ========== */
@@ -364,14 +531,14 @@
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  background: radial-gradient(
+  /* background: radial-gradient(
     ellipse 70% 60% at 12% 55%,
     rgba(120, 255, 160, 0) 0%,
     rgba(120, 255, 160, 0.15) 18%,
     rgba(0, 0, 0, 0.55) 45%,
     rgba(0, 0, 0, 0.95) 72%,
     #000 100%
-  );
+  ); */
   animation: portalOverlayFade 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
