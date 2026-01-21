@@ -249,15 +249,17 @@ function Lab3DContent(props: Lab3DProps) {
               </Show>
             </div>
 
-            {/* Right wall */}
-            <div class="lab-wall lab-wall-right">
-              <div class="lab-clock-wrapper">
-                <LabClock />
+            {/* Right wall - hidden on mobile during touch grass cinematic */}
+            <Show when={!(isMobile() && isCinematic())}>
+              <div class="lab-wall lab-wall-right">
+                <div class="lab-clock-wrapper">
+                  <LabClock />
+                </div>
+                <Show when={shaderMode() === "all"}>
+                  <WaveShader />
+                </Show>
               </div>
-              <Show when={shaderMode() === "all"}>
-                <WaveShader />
-              </Show>
-            </div>
+            </Show>
 
             {/* Floor */}
             <div class="lab-wall lab-wall-floor">
