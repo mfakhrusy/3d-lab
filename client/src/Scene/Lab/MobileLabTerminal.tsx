@@ -86,7 +86,7 @@ export function MobileLabTerminal(props: MobileLabTerminalProps) {
     await delay(800);
     await typeRobotMessage("This is where Fahru experiment with new ideas.");
     await delay(500);
-    await typeRobotMessage("Try: 'paint it green' or type 'help'");
+    await typeRobotMessage("Type 'help' to see all available commands.");
     inputRef?.focus();
   });
 
