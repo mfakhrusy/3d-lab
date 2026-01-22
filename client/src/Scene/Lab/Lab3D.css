@@ -296,6 +296,13 @@
   z-index: 10;
 }
 
+/* Clock on back wall for mobile */
+.lab-clock-wrapper-mobile {
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* Back wall iframe */
 .lab-back-iframe {
   position: absolute;

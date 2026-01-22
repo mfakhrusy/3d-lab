@@ -223,6 +223,12 @@ function Lab3DContent(props: Lab3DProps) {
           >
             {/* Back wall - facing us */}
             <div ref={backWallRef} class="lab-wall lab-wall-back">
+              {/* Clock on back wall for mobile (hidden when canvas/rain active) */}
+              <Show when={isMobile() && !webpageVisible() && !canvasVisible()}>
+                <div class="lab-clock-wrapper lab-clock-wrapper-mobile">
+                  <LabClock />
+                </div>
+              </Show>
               <Show when={webpageVisible()}>
                 <iframe
                   class="lab-back-iframe"
@@ -253,9 +259,12 @@ function Lab3DContent(props: Lab3DProps) {
             {/* Right wall - hidden on mobile during touch grass cinematic */}
             <Show when={!(isMobile() && isCinematic())}>
               <div class="lab-wall lab-wall-right">
-                <div class="lab-clock-wrapper">
-                  <LabClock />
-                </div>
+                {/* Clock only on desktop - mobile has it on back wall */}
+                <Show when={!isMobile()}>
+                  <div class="lab-clock-wrapper">
+                    <LabClock />
+                  </div>
+                </Show>
                 <Show when={shaderMode() === "all"}>
                   <WaveShader />
                 </Show>
