@@ -28,37 +28,40 @@ export function GuestBook() {
     setIsLoading(true);
     try {
       const serverEntries = await fetchGuestEntries();
-      
+
       // Load local pending entries
       const storedPending = localStorage.getItem("pendingGuestEntries");
       let localPending: GuestEntry[] = [];
       if (storedPending) {
         try {
-            localPending = JSON.parse(storedPending);
+          localPending = JSON.parse(storedPending);
         } catch (e) {
-            console.error("Failed to parse pending entries", e);
+          console.error("Failed to parse pending entries", e);
         }
       }
 
       // Filter out local pending entries that are now in the server response (approved or rejected - if rejected they won't be in server list but we should probably clear them if we knew, simple approach: remove if ID exists in server list)
       // Actually, if it's approved, it's in serverEntries. If rejected, it's NOT in serverEntries.
       // We need to keep "pending" ones that are NOT in serverEntries yet.
-      // But wait, if it was rejected, we don't want to show it anymore? 
+      // But wait, if it was rejected, we don't want to show it anymore?
       // Or we show it as rejected? The API only returns approved.
-      // For now, let's just show localPending items that are NOT in serverEntries. 
-      // If a user refreshes and it's still not approved, they still see it. 
-      // If it WAS rejected, it will permanently stay in localPending until they clear cache? 
+      // For now, let's just show localPending items that are NOT in serverEntries.
+      // If a user refreshes and it's still not approved, they still see it.
+      // If it WAS rejected, it will permanently stay in localPending until they clear cache?
       // Improve: maybe check age? Or just accept this limitation for now.
-      
+
       // Better approach: We can't know if it was rejected without querying specially.
       // Let's just merge. If ID matches, server wins (it's approved).
-      
-      const serverIds = new Set(serverEntries.map(e => e.id));
-      const stillPending = localPending.filter(e => !serverIds.has(e.id));
-      
+
+      const serverIds = new Set(serverEntries.map((e) => e.id));
+      const stillPending = localPending.filter((e) => !serverIds.has(e.id));
+
       // Clean up localStorage - remove items that are now on server
       if (stillPending.length !== localPending.length) {
-         localStorage.setItem("pendingGuestEntries", JSON.stringify(stillPending));
+        localStorage.setItem(
+          "pendingGuestEntries",
+          JSON.stringify(stillPending),
+        );
       }
 
       setEntries([...stillPending, ...serverEntries]);
@@ -101,22 +104,30 @@ export function GuestBook() {
       });
 
       if (newEntry.status === "pending_review") {
-          // Save to local storage
-          const storedPending = localStorage.getItem("pendingGuestEntries");
-          const localPending: GuestEntry[] = storedPending ? JSON.parse(storedPending) : [];
-          localPending.unshift(newEntry);
-          localStorage.setItem("pendingGuestEntries", JSON.stringify(localPending));
-          
-           setStatus({ type: "success", text: "SENT FOR REVIEW (VISIBLE TO YOU)" });
+        // Save to local storage
+        const storedPending = localStorage.getItem("pendingGuestEntries");
+        const localPending: GuestEntry[] = storedPending
+          ? JSON.parse(storedPending)
+          : [];
+        localPending.unshift(newEntry);
+        localStorage.setItem(
+          "pendingGuestEntries",
+          JSON.stringify(localPending),
+        );
+
+        setStatus({
+          type: "success",
+          text: "SENT FOR REVIEW (VISIBLE TO YOU)",
+        });
       } else {
-           setStatus({ type: "success", text: "ENTRY LOGGED SUCCESSFULLY" });
+        setStatus({ type: "success", text: "ENTRY LOGGED SUCCESSFULLY" });
       }
 
       setEntries((prev) => [newEntry, ...prev]);
       setName("");
       setMessage("");
       setWebsite("");
-      
+
       setTimeout(() => setStatus(null), 3000);
     } catch {
       setStatus({ type: "error", text: "ERROR: Failed to submit" });
@@ -271,10 +282,18 @@ export function GuestBook() {
                       </span>
                     </div>
                     <div class="guest-book-entry-message">
-                         {entry.message}
-                         <Show when={entry.status === "pending_review"}>
-                            <span style={{color: "yellow", "font-size": "0.8em", "margin-left": "0.5em"}}>[PENDING REVIEW]</span>
-                         </Show>
+                      {entry.message}
+                      <Show when={entry.status === "pending_review"}>
+                        <span
+                          style={{
+                            color: "yellow",
+                            "font-size": "0.8em",
+                            "margin-left": "0.5em",
+                          }}
+                        >
+                          [PENDING REVIEW]
+                        </span>
+                      </Show>
                     </div>
                   </div>
                 )}

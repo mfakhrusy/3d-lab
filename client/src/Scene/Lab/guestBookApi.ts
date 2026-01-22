@@ -13,9 +13,12 @@ export type CreateGuestEntryRequest = {
   website?: string;
 };
 
-// In production, this should be an environment variable.
-// For now, we default to localhost:3000.
-export const API_BASE_URL = "http://localhost:3000/api/guestbook";
+const isDev = ["localhost", "127.0.0.1", "0.0.0.0"].includes(
+  window.location.hostname,
+);
+export const API_BASE_URL = isDev
+  ? "http://localhost:3000/api/guestbook"
+  : "https://api.3d-lab.fahru.me/api/guestbook";
 
 export async function fetchGuestEntries(): Promise<GuestEntry[]> {
   try {
@@ -36,7 +39,7 @@ export async function createGuestEntry(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(request),
   });
-  
+
   if (!response.ok) throw new Error("Failed to create guest entry");
   return response.json();
 }
