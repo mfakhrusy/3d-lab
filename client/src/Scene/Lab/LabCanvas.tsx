@@ -25,44 +25,46 @@ export function LabCanvas(props: LabCanvasProps) {
    * 3. Drawing continues only when the mouse isn't over a terminal
    * This works regardless of the translateZ mapping since we're checking the actual DOM element the mouse is over via the event target.
    *
-   * @returns true if the mouse is over a terminal element, false otherwise
+   * @returns true if the pointer is over a terminal element, false otherwise
    */
-  const isMouseOnTopOfTerminal = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    return !!target.closest(".draggable-terminal");
-  };
-
-  const isMouseInsideCanvasArea = (e: MouseEvent) => {
-    if (!props.backWallRef) return false;
-    const wallRect = props.backWallRef.getBoundingClientRect();
+  const isPointerOnTopOfTerminal = (target: EventTarget | null) => {
+    if (!target) return false;
+    const el = target as HTMLElement;
     return (
-      e.clientX >= wallRect.left &&
-      e.clientX <= wallRect.right &&
-      e.clientY >= wallRect.top &&
-      e.clientY <= wallRect.bottom
+      !!el.closest(".draggable-terminal") ||
+      !!el.closest(".mobile-canvas-controls")
     );
   };
 
-  const getCanvasCoords = (e: MouseEvent) => {
+  const isPointInsideCanvasArea = (clientX: number, clientY: number) => {
+    if (!props.backWallRef) return false;
+    const wallRect = props.backWallRef.getBoundingClientRect();
+    return (
+      clientX >= wallRect.left &&
+      clientX <= wallRect.right &&
+      clientY >= wallRect.top &&
+      clientY <= wallRect.bottom
+    );
+  };
+
+  const getCanvasCoords = (clientX: number, clientY: number) => {
     if (!props.backWallRef || !canvasRef) return null;
 
     const wallRect = props.backWallRef.getBoundingClientRect();
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
 
-    // Check if mouse is within the back wall's visual bounds
+    // Check if pointer is within the back wall's visual bounds
     if (
-      mouseX < wallRect.left ||
-      mouseX > wallRect.right ||
-      mouseY < wallRect.top ||
-      mouseY > wallRect.bottom
+      clientX < wallRect.left ||
+      clientX > wallRect.right ||
+      clientY < wallRect.top ||
+      clientY > wallRect.bottom
     ) {
       return null;
     }
 
     // Map screen coordinates to canvas coordinates
-    const relativeX = (mouseX - wallRect.left) / wallRect.width;
-    const relativeY = (mouseY - wallRect.top) / wallRect.height;
+    const relativeX = (clientX - wallRect.left) / wallRect.width;
+    const relativeY = (clientY - wallRect.top) / wallRect.height;
 
     return {
       x: relativeX * canvasRef.width,
@@ -70,9 +72,14 @@ export function LabCanvas(props: LabCanvasProps) {
     };
   };
 
-  const handleMouseDown = (e: MouseEvent) => {
-    if (isInteracting() || isMouseOnTopOfTerminal(e)) return;
-    const coords = getCanvasCoords(e);
+  // Shared drawing logic
+  const startDrawing = (
+    clientX: number,
+    clientY: number,
+    target: EventTarget | null,
+  ) => {
+    if (isInteracting() || isPointerOnTopOfTerminal(target)) return;
+    const coords = getCanvasCoords(clientX, clientY);
     if (coords) {
       isDrawing = true;
       lastX = coords.x;
@@ -80,15 +87,21 @@ export function LabCanvas(props: LabCanvasProps) {
     }
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    const blockedByTerminal = isMouseOnTopOfTerminal(e);
+  const draw = (
+    clientX: number,
+    clientY: number,
+    target: EventTarget | null,
+  ) => {
+    const blockedByTerminal = isPointerOnTopOfTerminal(target);
     setIsAbleToDraw(
-      isMouseInsideCanvasArea(e) && !isInteracting() && !blockedByTerminal,
+      isPointInsideCanvasArea(clientX, clientY) &&
+        !isInteracting() &&
+        !blockedByTerminal,
     );
 
     if (isInteracting() || blockedByTerminal || !isDrawing || !ctx) return;
 
-    const coords = getCanvasCoords(e);
+    const coords = getCanvasCoords(clientX, clientY);
     if (coords) {
       ctx.beginPath();
       ctx.moveTo(lastX, lastY);
@@ -104,8 +117,51 @@ export function LabCanvas(props: LabCanvasProps) {
     }
   };
 
-  const handleMouseUp = () => {
+  const stopDrawing = () => {
     isDrawing = false;
+  };
+
+  // Mouse event handlers
+  const handleMouseDown = (e: MouseEvent) => {
+    startDrawing(e.clientX, e.clientY, e.target);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    draw(e.clientX, e.clientY, e.target);
+  };
+
+  const handleMouseUp = () => {
+    stopDrawing();
+  };
+
+  // Touch event handlers
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (isPointerOnTopOfTerminal(target)) return;
+
+    // Prevent scrolling when drawing on canvas
+    if (isPointInsideCanvasArea(touch.clientX, touch.clientY)) {
+      e.preventDefault();
+    }
+    startDrawing(touch.clientX, touch.clientY, target);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    // Prevent scrolling when drawing
+    if (isDrawing) {
+      e.preventDefault();
+    }
+    draw(touch.clientX, touch.clientY, target);
+  };
+
+  const handleTouchEnd = () => {
+    stopDrawing();
   };
 
   onMount(() => {
@@ -117,10 +173,19 @@ export function LabCanvas(props: LabCanvasProps) {
       }
     }
 
+    // Mouse events
     document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseleave", handleMouseUp);
+
+    // Touch events (passive: false to allow preventDefault)
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchcancel", handleTouchEnd);
   });
 
   onCleanup(() => {
@@ -128,6 +193,11 @@ export function LabCanvas(props: LabCanvasProps) {
     document.removeEventListener("mousemove", handleMouseMove);
     document.removeEventListener("mouseup", handleMouseUp);
     document.removeEventListener("mouseleave", handleMouseUp);
+
+    document.removeEventListener("touchstart", handleTouchStart);
+    document.removeEventListener("touchmove", handleTouchMove);
+    document.removeEventListener("touchend", handleTouchEnd);
+    document.removeEventListener("touchcancel", handleTouchEnd);
   });
 
   return (

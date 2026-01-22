@@ -24,7 +24,8 @@ export function LabTerminals(props: Props) {
         <HelpTerminal />
       </Show>
       <GuestBook />
-      <Show when={canvasVisible()}>
+      {/* CanvasControls only on desktop - mobile uses MobileCanvasControls in Lab3D */}
+      <Show when={canvasVisible() && !isMobile()}>
         <CanvasControls />
       </Show>
       <Show when={shaderMode() !== "none"}>

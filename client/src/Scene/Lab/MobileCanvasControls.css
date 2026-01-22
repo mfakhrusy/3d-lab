@@ -1,0 +1,92 @@
+.mobile-canvas-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  z-index: 101; /* Above MobileLabTerminal (100) */
+
+  background: linear-gradient(
+    180deg,
+    var(--lab-terminal-bg-start) 0%,
+    var(--lab-terminal-bg-end) 100%
+  );
+  border-top: 1px solid var(--lab-accent-25);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 -4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  font-family: var(--lab-font-mono);
+  transition: height 0.2s ease;
+}
+
+/* Minimized state - just the header bar */
+.mobile-canvas-controls-minimized {
+  height: auto;
+  bottom: 45%; /* Sit on top of MobileLabTerminal */
+}
+
+.mobile-canvas-controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--lab-accent-06);
+  border-bottom: 1px solid var(--lab-accent-15);
+  flex-shrink: 0;
+}
+
+.mobile-canvas-controls-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--lab-accent-80);
+  text-transform: uppercase;
+}
+
+.mobile-canvas-controls-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: var(--lab-accent-10);
+  border: 1px solid var(--lab-accent-30);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.mobile-canvas-controls-toggle:hover {
+  background: var(--lab-accent-20);
+  border-color: var(--lab-accent-50);
+}
+
+.mobile-canvas-controls-toggle-icon {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--lab-accent-80);
+  line-height: 1;
+}
+
+.mobile-canvas-controls-body {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Minimized header styling - add bottom border */
+.mobile-canvas-controls-minimized .mobile-canvas-controls-header {
+  border-bottom: none;
+  border-radius: 0;
+}

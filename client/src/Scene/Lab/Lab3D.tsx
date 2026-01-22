@@ -13,6 +13,7 @@ import { WaveShader } from "./WaveShader";
 import { LabTerminals } from "./LabTerminals";
 import { LabHorizonPortal } from "./LabHorizonPortal";
 import { MobileLabTerminal } from "./MobileLabTerminal";
+import { MobileCanvasControls } from "./MobileCanvasControls";
 import { useMobile } from "./useMobile";
 
 type Lab3DProps = {
@@ -291,6 +292,13 @@ function Lab3DContent(props: Lab3DProps) {
       {/* Mobile terminal rendered outside lab-container to avoid perspective/transform issues */}
       <Show when={isMobile() && !isEntering() && !isCinematic()}>
         <MobileLabTerminal labActions={labActions} handleBack={props.onBack} />
+      </Show>
+
+      {/* Mobile canvas controls - rendered outside lab-container */}
+      <Show
+        when={isMobile() && canvasVisible() && !isEntering() && !isCinematic()}
+      >
+        <MobileCanvasControls />
       </Show>
     </>
   );
