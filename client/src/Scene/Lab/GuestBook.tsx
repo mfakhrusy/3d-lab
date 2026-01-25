@@ -4,6 +4,7 @@ import {
   fetchGuestEntries,
   createGuestEntry,
   formatRelativeTime,
+  isGuestBookEnabled,
   type GuestEntry,
 } from "./guestBookApi";
 import "./GuestBook.css";
@@ -11,6 +12,8 @@ import "./GuestBook.css";
 const MAX_MESSAGE_LENGTH = 280;
 
 export function GuestBook() {
+  if (!isGuestBookEnabled()) return null;
+
   const [isMinimized, setIsMinimized] = createSignal(true);
   const [entries, setEntries] = createSignal<GuestEntry[]>([]);
   const [isLoading, setIsLoading] = createSignal(false);

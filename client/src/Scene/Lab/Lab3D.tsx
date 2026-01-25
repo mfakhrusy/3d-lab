@@ -14,6 +14,8 @@ import { LabTerminals } from "./LabTerminals";
 import { LabHorizonPortal } from "./LabHorizonPortal";
 import { MobileLabTerminal } from "./MobileLabTerminal";
 import { MobileCanvasControls } from "./MobileCanvasControls";
+import { MobileShaderControls } from "./MobileShaderControls";
+import { MobileGuestBook } from "./MobileGuestBook";
 import { useMobile } from "./useMobile";
 
 type Lab3DProps = {
@@ -95,6 +97,8 @@ function Lab3DContent(props: Lab3DProps) {
     setCanvasVisible,
     shaderMode,
     setShaderMode,
+    guestBookVisible,
+    setGuestBookVisible,
   } = useLab();
   const isMobile = useMobile();
 
@@ -171,6 +175,9 @@ function Lab3DContent(props: Lab3DProps) {
     showShaderAllWalls: () => setShaderMode("all"),
     hideShader: () => setShaderMode("none"),
     getShaderMode: () => shaderMode(),
+    showGuestBook: () => setGuestBookVisible(true),
+    hideGuestBook: () => setGuestBookVisible(false),
+    isGuestBookVisible: () => guestBookVisible(),
   };
 
   const palette = () => colorPalettes[paintColor()];
@@ -308,6 +315,20 @@ function Lab3DContent(props: Lab3DProps) {
         when={isMobile() && canvasVisible() && !isEntering() && !isCinematic()}
       >
         <MobileCanvasControls />
+      </Show>
+
+      {/* Mobile shader controls - rendered outside lab-container */}
+      <Show
+        when={isMobile() && shaderMode() !== "none" && !isEntering() && !isCinematic()}
+      >
+        <MobileShaderControls />
+      </Show>
+
+      {/* Mobile guest book - rendered outside lab-container */}
+      <Show
+        when={isMobile() && guestBookVisible() && !isEntering() && !isCinematic()}
+      >
+        <MobileGuestBook />
       </Show>
     </>
   );

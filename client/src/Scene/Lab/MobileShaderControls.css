@@ -1,0 +1,159 @@
+.mobile-shader-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  max-height: 50%;
+  display: flex;
+  flex-direction: column;
+  z-index: 101;
+
+  background: linear-gradient(
+    180deg,
+    var(--lab-terminal-bg-start) 0%,
+    var(--lab-terminal-bg-end) 100%
+  );
+  border-top: 1px solid var(--lab-accent-25);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 -4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  font-family: var(--lab-font-mono);
+  transition: max-height 0.2s ease;
+}
+
+.mobile-shader-controls-minimized {
+  height: auto;
+  bottom: 45%;
+}
+
+.mobile-shader-controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--lab-accent-06);
+  border-bottom: 1px solid var(--lab-accent-15);
+  flex-shrink: 0;
+}
+
+.mobile-shader-controls-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--lab-accent-80);
+  text-transform: uppercase;
+}
+
+.mobile-shader-controls-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: var(--lab-accent-10);
+  border: 1px solid var(--lab-accent-30);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.mobile-shader-controls-toggle:hover {
+  background: var(--lab-accent-20);
+  border-color: var(--lab-accent-50);
+}
+
+.mobile-shader-controls-toggle-icon {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--lab-accent-80);
+  line-height: 1;
+}
+
+.mobile-shader-controls-body {
+  padding: 16px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-shader-controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-shader-controls-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--lab-accent-70);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: 4px;
+  border-bottom: var(--lab-border-medium);
+}
+
+.mobile-shader-controls-slider-label {
+  display: grid;
+  grid-template-columns: 70px 35px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--lab-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobile-shader-controls-value {
+  font-family: var(--lab-font-mono);
+  color: var(--lab-accent-80);
+  text-align: right;
+}
+
+.mobile-shader-controls-slider {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.mobile-shader-controls-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--lab-accent-60);
+  cursor: pointer;
+}
+
+.mobile-shader-controls-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--lab-accent-60);
+  cursor: pointer;
+}
+
+.mobile-shader-controls-body .color-picker {
+  width: 100%;
+}
+
+.mobile-shader-controls-minimized .mobile-shader-controls-header {
+  border-bottom: none;
+  border-radius: 0;
+}

@@ -27,6 +27,9 @@ export type LabActions = {
   showShaderAllWalls: () => void;
   hideShader: () => void;
   getShaderMode: () => "none" | "back" | "all";
+  showGuestBook: () => void;
+  hideGuestBook: () => void;
+  isGuestBookVisible: () => boolean;
 };
 
 // Union type for all scene actions
