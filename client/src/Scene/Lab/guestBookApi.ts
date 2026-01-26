@@ -32,7 +32,7 @@ export function isGuestBookEnabled(): boolean {
 
 const API_BASE_URL = isDev
   ? "http://localhost:3000/api/guestbook"
-  : "https://api.3d-lab.fahru.me/api/guestbook";
+  : "https://api.fahru.me/api/guestbook";
 
 export async function fetchGuestEntries(): Promise<GuestEntry[]> {
   try {
