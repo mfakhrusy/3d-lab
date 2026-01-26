@@ -11,11 +11,31 @@ export type CreateGuestEntryRequest = {
   name: string;
   message: string;
   website?: string;
+  source?: string;
 };
 
 const isDev = ["localhost", "127.0.0.1", "0.0.0.0"].includes(
   window.location.hostname,
 );
+
+export function getSourceUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  const host = window.location.hostname;
+
+  if (isDev) {
+    return "http://localhost:5173";
+  }
+
+  const parts = host.split(".");
+  if (parts.length >= 2) {
+    const baseDomain = parts.slice(-2).join(".");
+    const subdomain = parts.slice(0, -2).join(".");
+    if (subdomain) {
+      return `https://${subdomain}.${baseDomain}`;
+    }
+  }
+  return `https://${host}`;
+}
 export function isGuestBookEnabled(): boolean {
   if (typeof window === "undefined") return false;
   if (isDev) {

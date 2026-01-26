@@ -9,6 +9,7 @@ import {
   getOwnedEntryId,
   setOwnedEntryId,
   clearOwnedEntryId,
+  getSourceUrl,
   type GuestEntry,
 } from "./guestBookApi";
 import "./MobileGuestBook.css";
@@ -102,6 +103,7 @@ export function MobileGuestBook() {
         name: trimmedName,
         message: trimmedMessage,
         website: trimmedWebsite || undefined,
+        source: getSourceUrl() || undefined,
       });
 
       if (newEntry.status === "pending_review") {

@@ -10,6 +10,7 @@ import {
   getOwnedEntryId,
   setOwnedEntryId,
   clearOwnedEntryId,
+  getSourceUrl,
   type GuestEntry,
 } from "./guestBookApi";
 import "./GuestBook.css";
@@ -117,6 +118,7 @@ export function GuestBook() {
         name: trimmedName,
         message: trimmedMessage,
         website: trimmedWebsite || undefined,
+        source: getSourceUrl() || undefined,
       });
 
       if (newEntry.status === "pending_review") {
